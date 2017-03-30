@@ -1,0 +1,10 @@
+---
+title: "README"
+author: "Isaac J. Faber"
+output: html_document
+---
+
+## The Metalog Distribution
+
+This repo is a working project on creating rfunctions for the metalog distribution
+
