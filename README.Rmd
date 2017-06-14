@@ -6,5 +6,5 @@ output: html_document
 
 ## The Metalog Distribution
 
-This repo is a working project on creating rfunctions for the metalog distribution
+This repo is a working project for a package that generates functions for the metalog distribution.
 
