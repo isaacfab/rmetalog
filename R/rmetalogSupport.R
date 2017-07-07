@@ -2,7 +2,11 @@
 
 #build the quantiles through a base function
 MLprobs <- function(x) {
-  l <- length(x[,1])
+  if(class(x)!='numeric'){
+    return(print('Error: input must be a numeric vector!'))
+  }
+  l <- length(x)
+  x<-as.data.frame(x)
   x$probs <- 0
   for(i in 1:l) {
     if(i==1){
@@ -15,7 +19,7 @@ MLprobs <- function(x) {
   return(x)
 }
 
-pdfMetalog<-function(a,y,t){
+pdfMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
   #error check that a is a numeric vector, y is a number between 0,1 and t is greater than a
   #some values for calculation
   d<-y*(1-y)
@@ -44,12 +48,29 @@ pdfMetalog<-function(a,y,t){
       e<-e+1
     }
   }
-  return((x^(-1)))
+
+  #some change of variables here
+  x<-(x^(-1))
+
+  if(boundedness!='u'){
+   M<-pdfQuantileMetalog(a,y,t,bounds=bounds,boundedness='u')
+  }
+  if(boundedness=='sl'){
+    x<-x*exp(-M)
+  }
+  if(boundedness=='su'){
+    x<-x*exp(M)
+  }
+  if(boundedness=='b'){
+    x<-(x*(1+exp(M))^2)/((bounds[2]-bounds[1])*exp(M))
+  }
+
+  return(x)
 }
 
 #Inverse lookup
 #cdf
-pdfInvMetalog<-function(a,y,t){
+pdfQuantileMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
   #error check that a is a numeric vector, y is a number between 0,1 and t is greater than a
   #some values for calculation
   f<-(y-0.5)
@@ -71,6 +92,19 @@ pdfInvMetalog<-function(a,y,t){
        o<-o+1
     }
   }
+
+  if(boundedness=='sl'){
+
+    x<-bounds[1]+exp(x)
+  }
+  if(boundedness=='su'){
+
+    x<-bounds[2]-exp(-x)
+  }
+  if(boundedness=='b'){
+
+    x<-(bounds[1]+bounds[2]*exp(x))/(1+exp(x))
+  }
  return(x)
 }
 
@@ -78,7 +112,7 @@ pdfInvMetalog<-function(a,y,t){
 #call this feasibility
 pdfMetalogValidation <- function(x){
   y<-min(x)
-  if(y>0){
+  if(y>=0){
     return('yes')
   }
   if(y<0){

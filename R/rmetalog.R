@@ -25,16 +25,21 @@ x<-read.csv('FishSize.csv',header=T)
 #term_limit
 #must be an integer in the range of 5 to n
 #must be less than the length of x
-rMetalog <- function(x,step_len=.01,probs=0,term_limit=16,bounds=c(0,60),boundedness='u') {
+rMetalog <- function(x,step_len=.01,probs=0,term_limit=16,bounds=c(),boundedness='u') {
 
 #create a list to hold all the objects
 myList<-list()
+#################inital error checking################
+if(class(x)!='numeric'){
+  return(print('Error: input x must be a numeric vector!'))
+}
 
 ###############handle the probabilites###############
+#this also converts x as a data frame
    if(probs == 0){
      x<-MLprobs(x)
-   }
-   else{
+   } else{
+     x<-as.data.frame(x)
      x$probs<-probs
    }
 
@@ -74,14 +79,22 @@ for (i in 5:(term_limit)){
   myList$Y<-x
 
 ###########build a vectors for each term###########
+  A<-data.frame()
   for (i in 1:(term_limit-1)){
     Y<-as.matrix(x[,4:(i+4)])
     z<-as.matrix(x$z)
     a<-paste0('a',(i+1))
     #add error catching here for non invertable
-    myList[[`a`]]<-((solve(t(Y)%*%Y) %*% t(Y)) %*% z)
-    myList[[`a`]]<-c(myList[[`a`]],rep(0,(term_limit-(i+1))))
+    temp<-((solve(t(Y)%*%Y) %*% t(Y)) %*% z)
+    temp<-c(temp,rep(0,(term_limit-(i+1))))
+    if(length(A)==0){
+      A<-data.frame(a2=temp)
+    }
+    if(length(A)!=0){
+      A[`a`]<-temp
+    }
   }
+  myList$A<-A
 
 ##############build the metalog m and M dataframes###############
 y<-seq(step_len,(1-step_len),step_len)
@@ -93,39 +106,33 @@ for(i in 2:term_limit){
   M_name<-paste0('M',i)
 
 #build pdf
-  m<-pdfMetalog(myList[[`a_name`]],y[1],term_limit)
+  m<-pdfMetalog(myList$A[`a_name`][,1],y[1],term_limit,bounds=bounds,boundedness=boundedness)
 
   for(j in 2:length(y)){
-    temp<-pdfMetalog(myList[[`a_name`]],y[j],term_limit)
+    temp<-pdfMetalog(myList$A[`a_name`][,1],y[j],term_limit,bounds=bounds,boundedness=boundedness)
     m<-c(m,temp)
   }
 
 #build inverse
-  M<-pdfInvMetalog(myList[[`a_name`]],y[1],term_limit)
+  M<-pdfQuantileMetalog(myList$A[`a_name`][,1],y[1],term_limit,bounds=bounds,boundedness=boundedness)
 
   for(j in 2:length(y)){
-    temp<-pdfInvMetalog(myList[[`a_name`]],y[j],term_limit)
+    temp<-pdfQuantileMetalog(myList$A[`a_name`][,1],y[j],term_limit,bounds=bounds,boundedness=boundedness)
     M<-c(M,temp)
   }
 
 
-#add traling and leading zero's and values for pdf bounds
+#add traling and leading zero's for pdf bounds
   if(boundedness=='sl'){
-    m<-m*exp(M)
     m<-c(0,m)
-    M<-bounds[1]+exp(M)
     M<-c(bounds[1],M)
   }
   if(boundedness=='su'){
-    m<-m*exp(-M)
     m<-c(m,0)
-    M<-bounds[2]-exp(-M)
     M<-c(M,bounds[2])
   }
   if(boundedness=='b'){
-    m<-(m*(1+exp(M)^2))/((bounds[2]-bounds[1])*exp(M))
     m<-c(0,m,0)
-    M<-(bounds[1]+bounds[2]*exp(M))/(1+exp(M))
     M<-c(bounds[1],M,bounds[2])
   }
 
@@ -157,7 +164,7 @@ myList$Validation<-y
 return(myList)
 }
 
-myMetalog <- rMetalog(x,step_len = .001,boundedness = 'u',term_limit = 16)
+myMetalog <- rMetalog(x$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'b',term_limit = 16)
 #myMetalog <- rMetalog(data.frame(sort(myInterestingData$time_diff_num)),step_len = .001,boundedness = 'sl')
 
 

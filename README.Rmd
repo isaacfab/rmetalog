@@ -8,3 +8,12 @@ output: html_document
 
 This repo is a working project for a package that generates functions for the metalog distribution.
 
+```{r}
+library(devtools)
+library(stringdist)
+library(ICSNP)
+install_github('isaacfab/FantasySportsDS')
+library(FantasySportsDS)
+```
+
+
