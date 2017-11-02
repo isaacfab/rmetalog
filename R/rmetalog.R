@@ -230,7 +230,6 @@ myList$Validation<-y
 return(myList)
 }
 
-myMetalog <- rMetalog(fishSize$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'b',term_limit = 3)
 
 #need a fuction that retuns a cdf function from an emperical input
 
