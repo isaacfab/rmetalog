@@ -20,7 +20,7 @@ MLprobs <- function(x) {
 }
 
 pdfMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
-  #error check that a is a numeric vector, y is a number between 0,1 and t is greater than a
+  #error check that a is a numeric vector, y is a number between 0,1 and t is greater than a*
   #some values for calculation
   d<-y*(1-y)
   f<-(y-0.5)
@@ -28,14 +28,22 @@ pdfMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
 
   #initiate pdf
 
-  x<-(a[2]/d)+a[4]
+  #for the first three terms
+  x<-(a[2]/d)
   if(a[3] != 0){
     x <- x +a[3]*((f/d)+l)
   }
 
+  #for the fourth term
+  if(t>3){
+    x<-x+a[4]
+  }
   #initalize some counting variables
   e<-1
   o<-1
+
+  #for all other terms greater than 4
+if(t>4){
   for(i in 5:t){
 
     if(i %% 2 != 0 ){#iff odd
@@ -48,7 +56,7 @@ pdfMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
       e<-e+1
     }
   }
-
+}
   #some change of variables here
   x<-(x^(-1))
 
@@ -76,12 +84,19 @@ pdfQuantileMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
   f<-(y-0.5)
   l<-log(y/(1-y))
 
-  x<- a[1]+a[2]*l+a[3]*f*l+a[4]*f
+  #for the first three terms
+  x<- a[1]+a[2]*l+a[3]*f*l
 
+  #for the fourth term
+  if(t>3){
+    x<-x+a[4]*f
+  }
   #some tarcking variables
   o<-2
   e<-2
 
+  #for all other terms greater than 4
+if(t>4){
   for(i in 5:t){
     if(i %% 2 == 0){
         x<-x+a[i]*f^e*l
@@ -92,7 +107,7 @@ pdfQuantileMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
        o<-o+1
     }
   }
-
+}
   if(boundedness=='sl'){
 
     x<-bounds[1]+exp(x)
@@ -112,6 +127,7 @@ pdfQuantileMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
 #call this feasibility
 pdfMetalogValidation <- function(x){
   y<-min(x)
+  print(y)
   if(y>=0){
     return('yes')
   }

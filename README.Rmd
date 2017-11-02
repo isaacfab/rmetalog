@@ -26,10 +26,11 @@ install_github('isaacfab/RMetalog')
 library(RMetalog)
 ```
 
-Once the package is loaded you start with a data set of continuous observations.  For this repository we will use an example of fish size measurements from the Pacific Northwest.  This data set is illustrative to demonstrate the flexibility of the metalog distribution.  This csv file is installed with the package.
+Once the package is loaded you start with a data set of continuous observations.  For this repository we will use an example of fish size measurements from the Pacific Northwest.  This data set is illustrative to demonstrate the flexibility of the metalog distribution.  The data frame is installed with the package.
 
 ```{r eval=FALSE}
-x<-read.csv('FishSize.csv',header=T)
+data("fishSize")
+summary(fishSize)
 ```
 
 The base function for the package is the call of the rMetalog distribution
@@ -43,21 +44,54 @@ This function takes several inputs:
 * data - vector of numeric data 
 * step_len - size of steps to evaluate the distribution (some value between 0 and 1)
 * probs - probability quantiles (optional but must be the same length as data vector)
-* boundedness - unbounded, upper, lower or bounded (only values u, su, sl and b)
+* boundedness - unbounded, semi-bounded upper, semi-bounded lower or bounded: only values u, su, sl and b are accepted (defaults to 'u')
 * bounds - the values of the bounds if upper, lower or bounded (must be two numeric values lower and upper)
-* term_limit - the number of metalog terms to evaluate (must be an integer greater than 5 and less than 30)  
+* term_limit - the number of metalog terms to evaluate (must be an integer greater than 5 and less than 30, defaults to 16)  
 
 In order to create a metalog distribution use the function and assigned the output to a variable.
 
 ```{r eval=FALSE}
-myMetalog <- rMetalog(x$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'b',term_limit = 16)
+myMetalog <- rMetalog(fishSize$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'b',term_limit = 16)
 ```
 
 This function returns a list with the following components for use
 
-* quantiles for each term (M matrix)
-* probability for each step (m matrix)
+* quantiles for each term (M matrix) where the term is the following interger so M4 is the fourth term
+* probability for each step (m matrix) where the term is the following interger so m4 is the fourth term
 * a matrix for calculation of probabilities
+* a validation vector on the results of each term evaluated
+
+Evalute the list contents  
+
+```{r eval=FALSE}
+str(myMetalog)
+```
+  
+The validation check is useful to see what terms returned a valid density function  
+
+```{r eval=FALSE}
+myMetalog$Validation
+```
+
+You can now plot some of the results using  
+
+```{r eval=FALSE}
+library(ggplot2)
+library(plotly)
+
+p<-data.frame(m=myMetalog$M$m2,M=myMetalog$M$M2,term=9)
+p<-rbind(p,data.frame(m=myMetalog$M$m14,M=myMetalog$M$M14,term=14))
+
+# The base plot
+q <- ggplot(p, aes(x=M, y=m)) + geom_line()
+q$term<-as.factor(q$term)
+
+# Faceted using subpanels
+q<-q + facet_wrap(~term)
+
+qt<-ggplotly(q)
+qt
+```
 
 As this package evolves this list will include some additional functionality
 

@@ -1,36 +1,99 @@
-#will use this file for inital metalog functions
+#base rMetalog function here!
 #example data for now
+load('data/fishSize.RData')
 
 #error checking here, valid values for the inputs
-#if prob data is input need to check it for validity
 #boundedness
-#must be n,sl,su or b
-#must have a numeric upper bound
-#must have a numeric lower bound
+#must be n,sl,su or b*
+#must have a numeric upper bound*
+#must have a numeric lower bound*
 
 #bounds
-#lower and upper bounds must be less/greater than all x values
+#lower and upper bounds must be less/greater than all x values*
 
 #prob
-#each entry must have a quantile
-#all entries need to be numeric between 0 and 1
+#each entry must have a quantile*
+#all entries need to be numeric between 0 and 1*
 #data must be contiguous
 
 #x
-#each entry needs to be numeric
+#each entry needs to be numeric*
 #data must be contiguious
-#length of data must be at least 2
+#length of data must be at least 2*
 
 #term_limit
-#must be an integer in the range of 5 to n
-#must be less than the length of x
+#must be an integer in the range of 5 to 30*
+#must be less than the length of x*
+
 rMetalog <- function(x,step_len=.01,probs=0,term_limit=16,bounds=c(),boundedness='u') {
 
 #create a list to hold all the objects
 myList<-list()
-#################inital error checking################
+
+################# inital error checking ################
 if(class(x)!='numeric'){
   return(print('Error: input x must be a numeric vector!'))
+}
+
+if(class(probs)!='numeric'){
+  return(print('Error: input probabilites must be a numeric vector!'))
+}
+
+if(boundedness!='u'&class(bounds)!='numeric'){
+  return(print('Error: bounds must be a numeric vector!'))
+}
+
+if(probs!=0&length(probs)!=length(x)){
+  return(print('Error: probability vector and vector x must be the same length'))
+}
+
+if(max(probs)>1|min(probs)<0){
+  return(print('Error: input probabilites have values between 0 and 1'))
+}
+
+if(length(x)<=2){
+  return(print('Error: input x must be of length 3 or greater'))
+}
+
+if(length(bounds)!=2&boundedness=='b'){
+  return(print('Error: must supply upper and lower bounds as a numeric vector (i.e. c(0,30))'))
+}
+
+if(length(bounds)!=1&(boundedness=='su'|boundedness=='sl')){
+  return(print('Error: must supply one bound'))
+}
+
+if(boundedness=='su'){
+  bounds<-c(min(x),bounds)
+}
+
+if(boundedness=='sl'){
+  bounds<-c(bounds,max(x))
+}
+
+if(boundedness!='u'&boundedness!='su'&boundedness!='sl'&boundedness!='b'){
+  return(print('Error: boundedness parameter must be u, su, sl or b only'))
+}
+
+if(max(x)>bounds[2]&boundedness=='su'){
+  return(print('Error: for semi-upper bounded the upper bound must be greater than the largest value in x'))
+}
+
+if(min(x)<bounds[1]&boundedness=='sl'){
+  return(print('Error: for semi-lower bounded the lower bound must be less than the smallest value in x'))
+}
+
+if(term_limit%%1!=0){
+  return(print('Error: term_limit perameter should be an ineteger between 3 and 30'))
+}
+if(term_limit<3){
+  return(print('Error: term_limit should be 3 or greater'))
+}
+if(term_limit>30){
+  return(print('Error: term_limit parameter should be less than 30'))
+}
+if(term_limit>length(x)){
+  return(print('Error: term_limit must be less than or equal to the length of the vector x'))
 }
 
 ###############handle the probabilites###############
@@ -61,18 +124,22 @@ if(class(x)!='numeric'){
   x$y1<-1
   x$y2<-(log(x$probs/(1-x$probs)))
   x$y3<-(x$probs-0.5)*x$y2
+
+if(term_limit>3){
   x$y4<-x$probs-0.5
-
+}
 #####complete the values through the term limit#####
-for (i in 5:(term_limit)){
+if(term_limit>4){
+    for (i in 5:(term_limit)){
 
-    y<-paste0('y',i)
-    if(i %% 2 != 0){
-     x[`y`]<-x$y4^(i%/%2)
-    }
-    if(i %% 2 == 0){
-     z<-paste0('y',(i-1))
-     x[`y`]<-x$y2*x[`z`]
+        y<-paste0('y',i)
+        if(i %% 2 != 0){
+         x[`y`]<-x$y4^(i%/%2)
+        }
+        if(i %% 2 == 0){
+         z<-paste0('y',(i-1))
+         x[`y`]<-x$y2*x[`z`]
+        }
     }
 }
   myList$Y<-x
@@ -163,9 +230,7 @@ myList$Validation<-y
 return(myList)
 }
 
-#myMetalog <- rMetalog(x$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'u',term_limit = 16)
-#myMetalog <- rMetalog(data.frame(sort(myInterestingData$time_diff_num)),step_len = .001,boundedness = 'sl')
-
+myMetalog <- rMetalog(fishSize$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'b',term_limit = 3)
 
 #need a fuction that retuns a cdf function from an emperical input
 
