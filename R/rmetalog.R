@@ -163,7 +163,7 @@ myList$Validation<-y
 return(myList)
 }
 
-myMetalog <- rMetalog(x$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'u',term_limit = 16)
+#myMetalog <- rMetalog(x$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'u',term_limit = 16)
 #myMetalog <- rMetalog(data.frame(sort(myInterestingData$time_diff_num)),step_len = .001,boundedness = 'sl')
 
 
