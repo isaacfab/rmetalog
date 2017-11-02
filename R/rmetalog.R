@@ -1,6 +1,5 @@
 #will use this file for inital metalog functions
 #example data for now
-x<-read.csv('FishSize.csv',header=T)
 
 #error checking here, valid values for the inputs
 #if prob data is input need to check it for validity
