@@ -127,7 +127,6 @@ if(t>4){
 #call this feasibility
 pdfMetalogValidation <- function(x){
   y<-min(x)
-  print(y)
   if(y>=0){
     return('yes')
   }
