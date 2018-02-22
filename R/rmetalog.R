@@ -2,29 +2,6 @@
 #example data for now
 load('data/fishSize.RData')
 
-#error checking here, valid values for the inputs
-#boundedness
-#must be n,sl,su or b*
-#must have a numeric upper bound*
-#must have a numeric lower bound*
-
-#bounds
-#lower and upper bounds must be less/greater than all x values*
-
-#prob
-#each entry must have a quantile*
-#all entries need to be numeric between 0 and 1*
-#data must be contiguous
-
-#x
-#each entry needs to be numeric*
-#data must be contiguious
-#length of data must be at least 2*
-
-#term_limit
-#must be an integer in the range of 5 to 30*
-#must be less than the length of x*
-
 rMetalog <- function(x,step_len=.01,probs=0,term_limit=16,bounds=c(),boundedness='u') {
 
 #create a list to hold all the objects
@@ -179,7 +156,7 @@ for(i in 2:term_limit){
     m<-c(m,temp)
   }
 
-#build inverse
+#build quantile values
   M<-pdfQuantileMetalog(myList$A[`a_name`][,1],y[1],term_limit,bounds=bounds,boundedness=boundedness)
 
   for(j in 2:length(y)){
@@ -251,4 +228,28 @@ return(myList)
 #curve(myfun2(x),add=TRUE,from=-1,to=10,col="red")
 #abline(v=4, col = "red")
 #abline(h=3, col = "red")
-#polygon(x,y,col="blue")
+#polygon(x,y,col="blue") 
+
+
+#error checking here, valid values for the inputs
+#boundedness
+#must be n,sl,su or b*
+#must have a numeric upper bound*
+#must have a numeric lower bound*
+
+#bounds
+#lower and upper bounds must be less/greater than all x values*
+
+#prob
+#each entry must have a quantile*
+#all entries need to be numeric between 0 and 1*
+#data must be contiguous
+
+#x
+#each entry needs to be numeric*
+#data must be contiguious
+#length of data must be at least 2*
+
+#term_limit
+#must be an integer in the range of 5 to 30*
+#must be less than the length of x*
