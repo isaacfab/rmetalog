@@ -33,13 +33,13 @@ Once the package is loaded you start with a data set of continuous observations.
 ``` r
 data("fishSize")
 summary(fishSize)
-#>     FishSize   
-#>  Min.   : 3.0  
-#>  1st Qu.: 7.0  
-#>  Median :10.0  
-#>  Mean   :10.2  
-#>  3rd Qu.:12.0  
-#>  Max.   :33.0
+#>     FishSize    
+#>  Min.   : 3.00  
+#>  1st Qu.: 7.00  
+#>  Median :10.00  
+#>  Mean   :10.18  
+#>  3rd Qu.:12.00  
+#>  Max.   :33.00
 ```
 
 The base function for the package is the call of the rMetalog distribution

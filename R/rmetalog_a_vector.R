@@ -1,7 +1,7 @@
-#working on improving the a vecotr estimation
+#working on improving the a vector estimation
 library(lpSolve)
 
-aVectorMetalogOG<-function(x,term_limit){
+aVectorMetalogOLS<-function(x,term_limit){
 
   A<-data.frame()
   for (i in 1:(term_limit-1)){
@@ -21,22 +21,26 @@ aVectorMetalogOG<-function(x,term_limit){
 return(A)
 }
 
-aVectorMetalogOG<-function(x,term_limit){
+aVectorMetalogLP<-function(x,term_limit){
 
   A<-data.frame()
   for (i in 1:(term_limit-1)){
     Y<-as.matrix(x[,4:(i+4)])
     z<-as.matrix(x$z)
-    #column sums
-    y_cs<-colSums(Y)
-    z_cs<-sum(z)
     #objective function coeficients
-    f.obj<-c(y_cs,-(z_cs))
+    f.obj<-0
+    #constraint matrix
+    f.con<-0
+    #symbol vector
+    f.dir<-c()
+    #right hand size for constraints
+    f.rhs<-0
 
+    #lp_sol<-lpSolve::lp("min",f.obj,f.con,f.dir,f.rhs,all.bin=TRUE)
   }#close the for loop
   return(A)
 }#close the function
 
-  lp_sol<-lpSolve::lp("max",f.obj,f.con,f.dir,f.rhs,all.bin=TRUE)
 
-temp<-aVectorMetalog(x,20)
+
+#temp<-aVectorMetalog(x,20)

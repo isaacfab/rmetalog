@@ -134,3 +134,50 @@ pdfMetalogValidation <- function(x){
   }
 
 }
+
+#function for returning the matrix of differentiation terms
+diffMatMetalog<-function(term_limit,step_len){
+  y<-seq(step_len,(1-step_len),step_len)
+  Diff<-data.frame()
+  for(i in 1:length(y)){
+    d<-y[i]*(1-y[i])
+    f<-(y[i]-0.5)
+    l<-log(y[i]/(1-y[i]))
+
+    #initiate pdf
+    diffVector<-0
+    #for the first three terms
+    x<-(1/d)
+    diffVector<-c(diffVector,x)
+    if(term_limit >2){
+      diffVector<-c(diffVector,((f/d)+l))
+    }
+
+    #for the fourth term
+    if(term_limit>3){
+      diffVector<-c(diffVector,1)
+    }
+    #initalize some counting variables
+    e<-1
+    o<-1
+
+    #for all other terms greater than 4
+    if(term_limit>4){
+      for(i in 5:term_limit){
+
+        if(i %% 2 != 0 ){#iff odd
+          diffVector<-c(diffVector,((o+1)*f^o))
+          o<-o+1
+
+        }
+        if(i %% 2 == 0 ){#iff even
+          diffVector<-c(diffVector,(((f^(e+1))/d)+(e+1)*(f^e)*l))
+          e<-e+1
+        }
+      }
+    }
+    Diff<-rbind(Diff,diffVector)
+  }#close the y vector for loop
+  Diff<-as.matrix(Diff)
+  return(Diff)
+}

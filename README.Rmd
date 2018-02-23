@@ -68,7 +68,7 @@ In order to create a metalog distribution use the function and assigned the outp
 myMetalog <- rMetalog(fishSize$FishSize,
                       step_len = .001,
                       bounds=c(0,60),
-                      boundedness = 'b',
+                      boundedness = 'u',
                       term_limit = 16)
 ```
 
