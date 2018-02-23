@@ -1,7 +1,6 @@
 ---
 title: "README"
 author: "Isaac J. Faber"
-always_allow_html: yes
 output: github_document
 ---
 
@@ -94,7 +93,6 @@ You can now plot some of the results using
 
 ```{r message=FALSE, warning=FALSE}
 library(ggplot2)
-library(plotly)
 
 p<-data.frame(m=myMetalog$M$m2,M=myMetalog$M$M2,term=9)
 p<-rbind(p,data.frame(m=myMetalog$M$m14,M=myMetalog$M$M14,term=14))
@@ -106,8 +104,7 @@ q$term<-as.factor(q$term)
 # Faceted using subpanels
 q<-q + facet_wrap(~term)
 
-qt<-ggplotly(q)
-qt
+q
 ```
 
 As this package evolves this list will include some additional functionality
