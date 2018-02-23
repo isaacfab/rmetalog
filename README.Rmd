@@ -1,8 +1,18 @@
 ---
 title: "README"
 author: "Isaac J. Faber"
-output: html_document
+output: github_document
 ---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
 
 ### The R Metalog Distribution
 
@@ -23,12 +33,14 @@ To install the package from this repository use the following:
 ```{r eval=FALSE}
 library(devtools)
 install_github('isaacfab/RMetalog')
+```
+```{r}
 library(RMetalog)
 ```
 
 Once the package is loaded you start with a data set of continuous observations.  For this repository we will use an example of fish size measurements from the Pacific Northwest.  This data set is illustrative to demonstrate the flexibility of the metalog distribution.  The data frame is installed with the package.
 
-```{r eval=FALSE}
+```{r}
 data("fishSize")
 summary(fishSize)
 ```
@@ -50,8 +62,12 @@ This function takes several inputs:
 
 In order to create a metalog distribution use the function and assigned the output to a variable.
 
-```{r eval=FALSE}
-myMetalog <- rMetalog(fishSize$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'b',term_limit = 16)
+```{r}
+myMetalog <- rMetalog(fishSize$FishSize,
+                      step_len = .001,
+                      bounds=c(0,60),
+                      boundedness = 'b',
+                      term_limit = 16)
 ```
 
 This function returns a list with the following components for use
@@ -75,9 +91,8 @@ myMetalog$Validation
 
 You can now plot some of the results using  
 
-```{r eval=FALSE}
+```{r message=FALSE, warning=FALSE}
 library(ggplot2)
-library(plotly)
 
 p<-data.frame(m=myMetalog$M$m2,M=myMetalog$M$M2,term=9)
 p<-rbind(p,data.frame(m=myMetalog$M$m14,M=myMetalog$M$M14,term=14))
@@ -89,8 +104,7 @@ q$term<-as.factor(q$term)
 # Faceted using subpanels
 q<-q + facet_wrap(~term)
 
-qt<-ggplotly(q)
-qt
+q
 ```
 
 As this package evolves this list will include some additional functionality
