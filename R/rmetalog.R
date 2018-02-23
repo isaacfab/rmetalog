@@ -2,7 +2,43 @@
 #example data for now
 load('data/fishSize.RData')
 
-rMetalog <- function(x,step_len=.01,probs=0,term_limit=16,bounds=c(),boundedness='u') {
+#' Fit the Metalog distribution
+#'
+#' @param x vector of numeric data
+#' @param step_len size of steps to evaluate the distribution (between 0 and 1)
+#' @param probs (Optional) probability quantiles, same length as \code{x}
+#' @param term_limit integer between 5 and 30, specifying number of metalog
+#'   terms to evaluate (default: 16)
+#' @param bounds numeric vector of size two, indicating lower/upper bounds
+#' @param boundedness character string specifying unbounded, semi-bounded upper,
+#'   semi-bounded lower or bounded; accepts values \code{u}, \code{su},
+#'   \code{sl} and \code{b} (default: 'u')
+#'
+#' @return A list object with elements
+#' \item{Y}{data frame}
+#' \item{A}{data frame}
+#' \item{M}{data frame}
+#' \item{Validation}{character vector (?)}
+#'
+#' @export
+#'
+#' @examples
+#' # Load example data
+#' data("fishSize")
+#'
+#' # Create a metalog object
+#' myMetalog <- rMetalog(fishSize$FishSize,
+#'                       step_len = .001,
+#'                       bounds=c(0, 60),
+#'                       boundedness = 'b',
+#'                       term_limit = 16)
+rMetalog <-
+  function(x,
+           step_len = .01,
+           probs = 0,
+           term_limit = 16,
+           bounds = c(),
+           boundedness = 'u') {
 
 #create a list to hold all the objects
 myList<-list()
@@ -228,7 +264,7 @@ return(myList)
 #curve(myfun2(x),add=TRUE,from=-1,to=10,col="red")
 #abline(v=4, col = "red")
 #abline(h=3, col = "red")
-#polygon(x,y,col="blue") 
+#polygon(x,y,col="blue")
 
 
 #error checking here, valid values for the inputs
