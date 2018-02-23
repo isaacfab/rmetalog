@@ -61,7 +61,7 @@ if(min(x)<bounds[1]&boundedness=='sl'){
 }
 
 if(term_limit%%1!=0){
-  return(print('Error: term_limit perameter should be an ineteger between 3 and 30'))
+  return(print('Error: term_limit parameter should be an ineteger between 3 and 30'))
 }
 if(term_limit<3){
   return(print('Error: term_limit should be 3 or greater'))
@@ -139,7 +139,7 @@ if(term_limit>4){
   }
   myList$A<-A
 
-##############build the metalog m and M dataframes###############
+##############build the metalog m(pdf) and M(quantile) dataframes###############
 y<-seq(step_len,(1-step_len),step_len)
 
 Mh<-data.frame()
@@ -157,10 +157,10 @@ for(i in 2:term_limit){
   }
 
 #build quantile values
-  M<-pdfQuantileMetalog(myList$A[`a_name`][,1],y[1],term_limit,bounds=bounds,boundedness=boundedness)
+  M<-quantileMetalog(myList$A[`a_name`][,1],y[1],term_limit,bounds=bounds,boundedness=boundedness)
 
   for(j in 2:length(y)){
-    temp<-pdfQuantileMetalog(myList$A[`a_name`][,1],y[j],term_limit,bounds=bounds,boundedness=boundedness)
+    temp<-quantileMetalog(myList$A[`a_name`][,1],y[j],term_limit,bounds=bounds,boundedness=boundedness)
     M<-c(M,temp)
   }
 
@@ -228,7 +228,7 @@ return(myList)
 #curve(myfun2(x),add=TRUE,from=-1,to=10,col="red")
 #abline(v=4, col = "red")
 #abline(h=3, col = "red")
-#polygon(x,y,col="blue") 
+#polygon(x,y,col="blue")
 
 
 #error checking here, valid values for the inputs

@@ -77,7 +77,7 @@ if(t>4){
 }
 
 #quantile function
-pdfQuantileMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
+quantileMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
   #error check that a is a numeric vector, y is a number between 0,1 and t is greater than a
   #some values for calculation
   f<-(y-0.5)

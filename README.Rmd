@@ -51,7 +51,7 @@ This function takes several inputs:
 In order to create a metalog distribution use the function and assigned the output to a variable.
 
 ```{r eval=FALSE}
-myMetalog <- rMetalog(fishSize$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'b',term_limit = 16)
+myMetalog <- rMetalog(fishSize$FishSize,step_len = .001,bounds=c(0,60),boundedness = 'u',term_limit = 16)
 ```
 
 This function returns a list with the following components for use
