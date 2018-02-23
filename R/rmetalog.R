@@ -1,6 +1,4 @@
 #base rMetalog function here!
-#example data for now
-load('data/fishSize.RData')
 
 #' Fit the Metalog distribution
 #'
