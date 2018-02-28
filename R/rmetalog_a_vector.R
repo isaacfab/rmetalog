@@ -71,7 +71,7 @@ aVectorsMetalogLP<-function(x,term_limit,diff_error=.001,diff_step=0.001){
     #symbol vector
     f.dir<-c(rep("==",length(Y[,1])),rep(">=",length(diff_mat[,1])))
     #right hand size for constraints
-    f.rhs<-c(z,rep(diff_error,length(diff_mat[,1])))
+    f.rhs<-c(z,rep(0,length(diff_mat[,1])))
 
     #solving the linear program
     lp_sol<-lpSolve::lp("min",f.obj,f.con,f.dir,f.rhs)
