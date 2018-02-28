@@ -132,17 +132,19 @@ if(term_limit>length(x)){
   }
 
 ################construct the Y Matrix initial values################
+pbY<-progress::progress_bar$new(total=(term_limit-1))
   x$y1<-1
   x$y2<-(log(x$probs/(1-x$probs)))
   x$y3<-(x$probs-0.5)*x$y2
-
+  pbY$tick()
 if(term_limit>3){
   x$y4<-x$probs-0.5
+  pbY$tick()
 }
 #####complete the values through the term limit#####
 if(term_limit>4){
     for (i in 5:(term_limit)){
-
+        pbY$tick()
         y<-paste0('y',i)
         if(i %% 2 != 0){
          x[`y`]<-x$y4^(i%/%2)
@@ -163,7 +165,10 @@ A<-aVectorsMetalogLP(myList$Y,term_limit=term_limit,diff_error=.001,diff_step=0.
 y<-seq(step_len,(1-step_len),step_len)
 
 Mh<-data.frame()
+print('Building distribution functions and samples')
+pbP<-progress::progress_bar$new(total=(term_limit-1))
 for(i in 2:term_limit){
+  pbP$tick()
   a_name<-paste0('a',i)
   m_name<-paste0('m',i)
   M_name<-paste0('M',i)
@@ -209,9 +214,24 @@ for(i in 2:term_limit){
   }
 }
 
+InitalResults<-data.frame(term=(rep(c('2 Terms'),length(Mh[,1]))),pdfValues=Mh$m2,quantileValues=Mh$M2)
+
+for(i in 2:(length(Mh[1,])/2)){
+  TempResults<-data.frame(term=(rep(paste0((i+1),' Terms'),length(Mh[,1]))),pdfValues=Mh[,(i*2-1)],quantileValues=Mh[,(i*2)])
+  InitalResults<-rbind(InitalResults,TempResults)
+}
+
+# The base plot
+q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=pdfValues)) + ggplot2::geom_line()
+#q$term<-as.factor(q$term)
+
+# Faceted using subpanels
+q<-q + ggplot2::facet_wrap(~term,ncol=4)
+
+q
 
 myList$M<-Mh
-
+myList$GridPlot<-q
 #########pdf validation################
 y<-c()
 for(i in 2:term_limit){

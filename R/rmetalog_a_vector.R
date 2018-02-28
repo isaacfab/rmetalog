@@ -24,7 +24,10 @@ return(A)
 aVectorsMetalogLP<-function(x,term_limit,diff_error=.001,diff_step=0.001){
 
   A<-data.frame()
+  print('Building the metalog distributions now')
+  pb<-progress::progress_bar$new(total=(term_limit-1))
   for (i in 1:(term_limit-1)){
+    pb$tick()
     Y<-as.matrix(x[,4:(i+4)])
     Y_neg=-(Y)
     new_Y<-matrix(c(Y[,1],Y_neg[,1]),ncol=2)

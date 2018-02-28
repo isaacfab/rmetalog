@@ -54,22 +54,24 @@ rMetalog()
 This function takes several inputs:
 
 * data - vector of numeric data 
-* step_len - size of steps to evaluate the distribution (some value between 0 and 1)
 * probs - probability quantiles (optional but must be the same length as data vector)
+* step_len - size of steps to evaluate the distribution (some value between 0 and 1)
 * boundedness - unbounded, semi-bounded upper, semi-bounded lower or bounded: only values u, su, sl and b are accepted (defaults to 'u')
 * bounds - the values of the bounds if upper, lower or bounded (must be two numeric values lower and upper)
-* term_limit - the number of metalog terms to evaluate (must be an integer greater than 5 and less than 30, defaults to 16)  
+* term_limit - the number of metalog terms to evaluate (must be an integer greater than or equal to 3 and less than 30, defaults to 3)  
 
 In order to create a metalog distribution use the function and assigned the output to a variable.
 
 
 
 ```{r}
-myMetalog <- rMetalog(fishSize$FishSize,
-                      step_len = .001,
-                      bounds=c(0,60),
-                      boundedness = 'u',
-                      term_limit = 16)
+#use a smaller subset for performance
+mysample <- fishSize[sample(1:nrow(fishSize), 200,replace=FALSE),]
+myMetalog <- rMetalog(mysample,
+                      step_len = .01,
+                      bounds=0,
+                      boundedness = 'sl',
+                      term_limit = 9)
 ```
 
 This function returns a list with the following components for use
@@ -94,19 +96,7 @@ myMetalog$Validation
 You can now plot some of the results using  
 
 ```{r message=FALSE, warning=FALSE}
-library(ggplot2)
-
-p<-data.frame(m=myMetalog$M$m2,M=myMetalog$M$M2,term=9)
-p<-rbind(p,data.frame(m=myMetalog$M$m14,M=myMetalog$M$M14,term=14))
-
-# The base plot
-q <- ggplot(p, aes(x=M, y=m)) + geom_line()
-q$term<-as.factor(q$term)
-
-# Faceted using subpanels
-q<-q + facet_wrap(~term)
-
-q
+myMetalog$GridPlot
 ```
 
 As this package evolves this list will include some additional functionality
