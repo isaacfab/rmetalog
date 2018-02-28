@@ -66,7 +66,7 @@ if(t>4){
   x<-(x^(-1))
 
   if(boundedness!='u'){
-   M<-pdfQuantileMetalog(a,y,t,bounds=bounds,boundedness='u')
+   M<-quantileMetalog(a,y,t,bounds=bounds,boundedness='u')
   }
   if(boundedness=='sl'){
     x<-x*exp(-M)

@@ -54,7 +54,7 @@ if(boundedness!='u'&class(bounds)!='numeric'){
   return(print('Error: bounds must be a numeric vector!'))
 }
 
-if(probs!=0&(length(probs)!=length(x))){
+if(probs[1]!=0&(length(probs)!=length(x))){
   return(print('Error: probability vector and vector x must be the same length'))
 }
 
@@ -109,7 +109,7 @@ if(term_limit>length(x)){
 
 ###############handle the probabilites###############
 #this also converts x as a data frame
-   if(probs == 0){
+   if(probs[1] == 0){
      x<-MLprobs(x)
    } else{
      x<-as.data.frame(x)
