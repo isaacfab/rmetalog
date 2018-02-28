@@ -7,6 +7,11 @@ MLprobs <- function(x) {
   }
   l <- length(x)
   x<-as.data.frame(x)
+
+  #need to sort the dataframe for the quantiles to work out
+  x <- x[order(x),]
+  x<-as.data.frame(x)
+  #calculate the liklihood as an interpolation
   x$probs <- 0
   for(i in 1:l) {
     if(i==1){
@@ -179,5 +184,11 @@ diffMatMetalog<-function(term_limit,step_len){
     Diff<-rbind(Diff,diffVector)
   }#close the y vector for loop
   Diff<-as.matrix(Diff)
-  return(Diff)
+  Diff_neg=-(Diff)
+  new_Diff<-matrix(c(Diff[,1],Diff_neg[,1]),ncol=2)
+  for(c in 2:length(Diff[1,])){
+    new_Diff<-cbind(new_Diff,Diff[,c])
+    new_Diff<-cbind(new_Diff,Diff_neg[,c])
+  }
+  return(new_Diff)
 }

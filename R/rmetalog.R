@@ -32,8 +32,8 @@
 #'                       term_limit = 16)
 rMetalog <-
   function(x,
-           step_len = .01,
            probs = 0,
+           step_len = .01,
            term_limit = 16,
            bounds = c(),
            boundedness = 'u') {
@@ -54,7 +54,7 @@ if(boundedness!='u'&class(bounds)!='numeric'){
   return(print('Error: bounds must be a numeric vector!'))
 }
 
-if(probs!=0&length(probs)!=length(x)){
+if(probs!=0&(length(probs)!=length(x))){
   return(print('Error: probability vector and vector x must be the same length'))
 }
 
@@ -156,21 +156,7 @@ if(term_limit>4){
   myList$Y<-x
 
 ###########build a vectors for each term###########
-  A<-data.frame()
-  for (i in 1:(term_limit-1)){
-    Y<-as.matrix(x[,4:(i+4)])
-    z<-as.matrix(x$z)
-    a<-paste0('a',(i+1))
-    #add error catching here for non invertable
-    temp<-((solve(t(Y)%*%Y) %*% t(Y)) %*% z)
-    temp<-c(temp,rep(0,(term_limit-(i+1))))
-    if(length(A)==0){
-      A<-data.frame(a2=temp)
-    }
-    if(length(A)!=0){
-      A[`a`]<-temp
-    }
-  }
+A<-aVectorsMetalogLP(myList$Y,term_limit=term_limit,diff_error=.001,diff_step=0.001)
   myList$A<-A
 
 ##############build the metalog m(pdf) and M(quantile) dataframes###############
