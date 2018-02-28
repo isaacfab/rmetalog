@@ -34,8 +34,8 @@ rMetalog <-
   function(x,
            probs = 0,
            step_len = .01,
-           term_limit = 16,
-           bounds = c(),
+           term_limit = 3,
+           bounds = c(0,1),
            boundedness = 'u') {
 
 #create a list to hold all the objects
