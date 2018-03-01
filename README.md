@@ -61,12 +61,12 @@ In order to create a metalog distribution use the function and assigned the outp
 
 ``` r
 #use a smaller subset for performance
-mysample <- fishSize[sample(1:nrow(fishSize), 200,replace=FALSE),]
+mysample <- fishSize[sample(1:nrow(fishSize), 250,replace=FALSE),]
 myMetalog <- rMetalog(mysample,
                       step_len = .01,
                       bounds=0,
                       boundedness = 'sl',
-                      term_limit = 9)
+                      term_limit = 17)
 #> [1] "Building the metalog distributions now"
 #> [1] "Building distribution functions and samples"
 ```
@@ -93,10 +93,16 @@ myMetalog$Validation
 You can now plot some of the results using
 
 ``` r
-myMetalog$GridPlot
+myMetalog$GridPlotPDF
 ```
 
 ![](README-unnamed-chunk-9-1.png)
+
+``` r
+myMetalog$GridPlotCDF
+```
+
+![](README-unnamed-chunk-10-1.png)
 
 As this package evolves this list will include some additional functionality
 

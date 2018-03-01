@@ -212,12 +212,30 @@ for(i in 2:term_limit){
      Mh[`m_name`]<-m
      Mh[`M_name`]<-M
   }
+}#close for loop
+
+#adding the y values for the bounded models
+if(boundedness=='sl'){
+  y<-c(0,y)
+}
+if(boundedness=='su'){
+  y<-c(y,1)
+}
+if(boundedness=='b'){
+  y<-c(0,y,1)
 }
 
-InitalResults<-data.frame(term=(rep(c('2 Terms'),length(Mh[,1]))),pdfValues=Mh$m2,quantileValues=Mh$M2)
 
-for(i in 2:(length(Mh[1,])/2)){
-  TempResults<-data.frame(term=(rep(paste0((i+1),' Terms'),length(Mh[,1]))),pdfValues=Mh[,(i*2-1)],quantileValues=Mh[,(i*2)])
+Mh$y<-y
+
+#return values
+myList$M<-Mh
+
+#build plots
+InitalResults<-data.frame(term=(rep(c('2 Terms'),length(Mh[,1]))),pdfValues=Mh$m2,quantileValues=Mh$M2,cumValue=Mh$y)
+
+for(i in 2:(length(Mh[1,]-1)/2)){
+  TempResults<-data.frame(term=(rep(paste0((i+1),' Terms'),length(Mh[,1]))),pdfValues=Mh[,(i*2-1)],quantileValues=Mh[,(i*2)],cumValue=Mh$y)
   InitalResults<-rbind(InitalResults,TempResults)
 }
 
@@ -226,12 +244,22 @@ q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=pdfValues))
 #q$term<-as.factor(q$term)
 
 # Faceted using subpanels
-q<-q + ggplot2::facet_wrap(~term,ncol=4)
+q<-q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
 
 q
 
-myList$M<-Mh
-myList$GridPlot<-q
+myList$GridPlotPDF<-q
+
+# The base plot
+q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=cumValue)) + ggplot2::geom_line()
+#q$term<-as.factor(q$term)
+
+# Faceted using subpanels
+q<-q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
+
+q
+
+myList$GridPlotCDF<-q
 #########pdf validation################
 y<-c()
 for(i in 2:term_limit){
