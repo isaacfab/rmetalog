@@ -57,16 +57,21 @@ This function takes several inputs:
 -   bounds - the values of the bounds if upper, lower or bounded (must be two numeric values lower and upper)
 -   term\_limit - the number of metalog terms to evaluate (must be an integer greater than or equal to 3 and less than 30, defaults to 3)
 
-In order to create a metalog distribution use the function and assigned the output to a variable.
+In order to create a metalog distribution use the function and assign the output to a variable.
 
 ``` r
 #use a smaller subset for performance
-mysample <- fishSize[sample(1:nrow(fishSize), 250,replace=FALSE),]
+mysample <- fishSize[sample(1:nrow(fishSize), 200,replace=FALSE),]
+```
+
+build the distributions.
+
+``` r
 myMetalog <- rMetalog(mysample,
                       step_len = .01,
                       bounds=0,
                       boundedness = 'sl',
-                      term_limit = 17)
+                      term_limit = 13)
 #> [1] "Building the metalog distributions now"
 #> [1] "Building distribution functions and samples"
 ```
@@ -77,6 +82,7 @@ This function returns a list with the following components for use
 -   probability for each step (m matrix) where the term is the following interger so m4 is the fourth term
 -   a matrix for calculation of probabilities
 -   a validation vector on the results of each term evaluated
+-   pannel plots for pdf's and cdf's for exploration
 
 Evalute the list contents
 
@@ -87,7 +93,20 @@ str(myMetalog)
 The validation check is useful to see what terms returned a valid density function
 
 ``` r
-myMetalog$Validation
+print(myMetalog$Validation, row.names=FALSE)
+#>  term valid
+#>     2   yes
+#>     3   yes
+#>     4   yes
+#>     5   yes
+#>     6   yes
+#>     7   yes
+#>     8   yes
+#>     9   yes
+#>    10   yes
+#>    11   yes
+#>    12   yes
+#>    13   yes
 ```
 
 You can now plot some of the results using
@@ -96,16 +115,15 @@ You can now plot some of the results using
 myMetalog$GridPlotPDF
 ```
 
-![](README-unnamed-chunk-9-1.png)
+![](README-unnamed-chunk-10-1.png)
 
 ``` r
 myMetalog$GridPlotCDF
 ```
 
-![](README-unnamed-chunk-10-1.png)
+![](README-unnamed-chunk-11-1.png)
 
 As this package evolves this list will include some additional functionality
 
--   pannel plot function
 -   cdf function
 -   sampling function

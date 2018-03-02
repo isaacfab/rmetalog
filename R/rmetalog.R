@@ -165,7 +165,7 @@ A<-aVectorsMetalogLP(myList$Y,term_limit=term_limit,diff_error=.001,diff_step=0.
 y<-seq(step_len,(1-step_len),step_len)
 
 Mh<-data.frame()
-print('Building distribution functions and samples')
+print('Building distribution functions and samples', row.names=FALSE)
 pbP<-progress::progress_bar$new(total=(term_limit-1))
 for(i in 2:term_limit){
   pbP$tick()
@@ -262,62 +262,19 @@ q
 myList$GridPlotCDF<-q
 #########pdf validation################
 y<-c()
+t<-c()
 for(i in 2:term_limit){
   m<-paste0('m',i)
   x<-pdfMetalogValidation(myList$M[`m`])
+  t<-c(t,i)
   y<-c(y,x)
 
 }
-
-myList$Validation<-y
+val<-data.frame(term=t,valid=y)
+myList$Validation<-val
 
 
 return(myList)
 }
 
 
-#need a fuction that retuns a cdf function from an emperical input
-
-
-#will us this to build the base plots
-#myfun1 <- function(x){
-#  x + 2.5
-#}
-
-#myfun2 <- function(x){
-#  -0.5*x + 4.5
-#}
-
-#x<-c(0,0,0.5,3,4,4)
-#y<-c(0,2.5,3,3,2.5,0)
-
-#curve(myfun1(x),from=-2,to=5,col="blue",xlab="x1",ylab="x2")
-#abline(h=0, v=0, col = "gray60",lwd=5)
-#curve(myfun2(x),add=TRUE,from=-1,to=10,col="red")
-#abline(v=4, col = "red")
-#abline(h=3, col = "red")
-#polygon(x,y,col="blue")
-
-
-#error checking here, valid values for the inputs
-#boundedness
-#must be n,sl,su or b*
-#must have a numeric upper bound*
-#must have a numeric lower bound*
-
-#bounds
-#lower and upper bounds must be less/greater than all x values*
-
-#prob
-#each entry must have a quantile*
-#all entries need to be numeric between 0 and 1*
-#data must be contiguous
-
-#x
-#each entry needs to be numeric*
-#data must be contiguious
-#length of data must be at least 2*
-
-#term_limit
-#must be an integer in the range of 5 to 30*
-#must be less than the length of x*

@@ -24,7 +24,7 @@ return(A)
 aVectorsMetalogLP<-function(x,term_limit,diff_error=.001,diff_step=0.001){
 
   A<-data.frame()
-  print('Building the metalog distributions now')
+  print('Building the metalog distributions now', row.names=FALSE)
   pb<-progress::progress_bar$new(total=(term_limit-1))
   for (i in 1:(term_limit-1)){
     pb$tick()
@@ -74,7 +74,7 @@ aVectorsMetalogLP<-function(x,term_limit,diff_error=.001,diff_step=0.001){
     #symbol vector
     f.dir<-c(rep("==",length(Y[,1])),rep(">=",length(diff_mat[,1])))
     #right hand size for constraints
-    f.rhs<-c(z,rep(0,length(diff_mat[,1])))
+    f.rhs<-c(z,rep(diff_error,length(diff_mat[,1])))
 
     #solving the linear program
     lp_sol<-lpSolve::lp("min",f.obj,f.con,f.dir,f.rhs)
