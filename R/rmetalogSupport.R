@@ -1,7 +1,7 @@
 #Supporting functions called inside the metalog function call
 
 #build the quantiles through a base function
-MLprobs <- function(x) {
+MLprobs <- function(x,step_len) {
   if(class(x)!='numeric'){
     return(print('Error: input must be a numeric vector!'))
   }
@@ -21,6 +21,14 @@ MLprobs <- function(x) {
       x$probs[i]<-(x$probs[i-1]+(1/l))
     }
   }
+  #if the data is very long we down convert to a smaller but representative vector
+  if(length(x[1])>100){
+    y<-seq(step_len,(1-step_len),step_len)
+   tailstep<-(step_len/10)
+    y<-c(seq(tailstep,(min(y)-tailstep),tailstep),y,seq((max(y)+tailstep),tailstep,tailstep))
+    x_new<-quantile(x[,1])
+  }
+
   return(x)
 }
 

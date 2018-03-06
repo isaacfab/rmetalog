@@ -110,7 +110,7 @@ if(term_limit>length(x)){
 ###############handle the probabilites###############
 #this also converts x as a data frame
    if(probs[1] == 0){
-     x<-MLprobs(x)
+     x<-MLprobs(x,step_len=step_len)
    } else{
      x<-as.data.frame(x)
      x$probs<-probs
