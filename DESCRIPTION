@@ -5,6 +5,9 @@ Version: 0.1.0
 Author: Isaac Faber
 Maintainer: Isaac Faber <isaacfab@gmail.com>
 Description: Implementation of the metalog distrubution in R.
+Imports:
+    lpSolve,
+    progress
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
