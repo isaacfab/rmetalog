@@ -24,7 +24,7 @@
 #' # Load example data
 #' data("fishSize")
 #'
-#' # Create a metalog object
+#' # Create a bounded metalog object
 #' myMetalog <- rMetalog(fishSize$FishSize,
 #'                       step_len = .001,
 #'                       bounds=c(0, 60),
