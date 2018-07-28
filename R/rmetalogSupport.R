@@ -25,7 +25,7 @@ MLprobs <- function(x,step_len) {
   if(length(x[1])>100){
     y<-seq(step_len,(1-step_len),step_len)
    tailstep<-(step_len/10)
-    y<-c(seq(tailstep,(min(y)-tailstep),tailstep),y,seq((max(y)+tailstep),tailstep,tailstep))
+    y<-c(seq(tailstep,(min(y)-tailstep),tailstep),y,seq((max(y)+tailstep),1,tailstep))
     x_new<-quantile(x[,1])
   }
 
