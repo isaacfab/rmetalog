@@ -57,23 +57,16 @@ This function takes several inputs:
 -   bounds - the values of the bounds if upper, lower or bounded (must be two numeric values lower and upper)
 -   term\_limit - the number of metalog terms to evaluate (must be an integer greater than or equal to 3 and less than 30, defaults to 3)
 
-In order to create a metalog distribution use the function and assign the output to a variable.
-
-``` r
-#use a smaller subset for performance
-mysample <- fishSize[sample(1:nrow(fishSize), 200,replace=FALSE),]
-```
+In order to create a metalog distribution use the function and assign the output to a variable (myMetalog).
 
 build the distributions.
 
 ``` r
-myMetalog <- rMetalog(mysample,
+myMetalog <- rMetalog(fishSize$FishSize,
                       step_len = .01,
                       bounds=0,
                       boundedness = 'sl',
                       term_limit = 13)
-#> [1] "Building the metalog distributions now"
-#> [1] "Building distribution functions and samples"
 ```
 
 This function returns a list with the following components for use
@@ -115,15 +108,15 @@ You can now plot some of the results using
 myMetalog$GridPlotPDF
 ```
 
-![](README-unnamed-chunk-10-1.png)
+![](README-unnamed-chunk-9-1.png)
 
 ``` r
 myMetalog$GridPlotCDF
 ```
 
-![](README-unnamed-chunk-11-1.png)
+![](README-unnamed-chunk-10-1.png)
 
 As this package evolves this list will include some additional functionality
 
--   cdf function
+-   improved error checking
 -   sampling function

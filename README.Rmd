@@ -60,17 +60,12 @@ This function takes several inputs:
 * bounds - the values of the bounds if upper, lower or bounded (must be two numeric values lower and upper)
 * term_limit - the number of metalog terms to evaluate (must be an integer greater than or equal to 3 and less than 30, defaults to 3)  
 
-In order to create a metalog distribution use the function and assign the output to a variable.  
+In order to create a metalog distribution use the function and assign the output to a variable (myMetalog).  
 
-```{r}
-#use a smaller subset for performance
-mysample <- fishSize[sample(1:nrow(fishSize), 250 ,replace=FALSE),]
-```
-  
 build the distributions.
 
 ```{r}
-myMetalog <- rMetalog(mysample,
+myMetalog <- rMetalog(fishSize$FishSize,
                       step_len = .01,
                       bounds=0,
                       boundedness = 'sl',
@@ -109,7 +104,7 @@ myMetalog$GridPlotCDF
 
 As this package evolves this list will include some additional functionality
 
-* cdf function
+* improved error checking
 * sampling function
 
 
