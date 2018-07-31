@@ -13,11 +13,12 @@
 #'   \code{sl} and \code{b} (default: 'u')
 #'
 #' @return A list object with elements
-#' \item{Y}{data frame}
-#' \item{A}{data frame}
-#' \item{M}{data frame}
-#' \item{Validation}{character vector (?)}
-#'
+#' \item{Y}{a dataframe with the first column the raw data, second column the cummulative probabilites and the rest of the rows the Y matrix for each term}
+#' \item{A}{a dataframe of coeficients for each metalog distribution}
+#' \item{M}{a dataframe of quantiles (M) and probilites (m) indexed for each term (i.e. M3,m3 for the third term)}
+#' \item{GridPlotCDF()}{a function that displays a grid plot of the CDF for each term}
+#' \item{VGridPlotPDF()}{a fucntion that displays a gird plot of the PDF for each term}
+#' \item{Validation}{a vector of yes/no indicators of the valid distributions for each term}
 #' @export
 #'
 #' @examples
