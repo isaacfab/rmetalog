@@ -19,6 +19,7 @@
 #' \item{GridPlotCDF()}{a function that displays a grid plot of the CDF for each term}
 #' \item{VGridPlotPDF()}{a fucntion that displays a gird plot of the PDF for each term}
 #' \item{Validation}{a vector of yes/no indicators of the valid distributions for each term}
+#'
 #' @export
 #'
 #' @examples
@@ -33,7 +34,7 @@
 #'                       term_limit = 16)
 rMetalog <-
   function(x,
-           probs = 0,
+           probs = NA,
            step_len = .01,
            term_limit = 3,
            bounds = c(0,1),
@@ -44,35 +45,42 @@ myList<-list()
 
 ################# inital error checking ################
 if(class(x)!='numeric'){
-  return(print('Error: input x must be a numeric vector!'))
+  stop('Input x must be a numeric vector!')
 }
 
-if(class(probs)!='numeric'){
-  return(print('Error: input probabilites must be a numeric vector!'))
+if(class(bounds)!='numeric'){
+  stop('Error: bounds must be a numeric vector!')
 }
 
-if(boundedness!='u'&class(bounds)!='numeric'){
-  return(print('Error: bounds must be a numeric vector!'))
+if(term_limit%%1!=0){
+  stop('Error: term_limit parameter should be an integer between 3 and 30')
 }
 
-if(probs[1]!=0&(length(probs)!=length(x))){
-  return(print('Error: probability vector and vector x must be the same length'))
+if(!is.na(probs) & (length(probs)!=length(x))){
+  stop('Error: probs vector and x vector must be the same length')
 }
 
-if(max(probs)>1|min(probs)<0){
-  return(print('Error: input probabilites have values between 0 and 1'))
+if(!is.na(probs)){
+
+  if(class(probs)!='numeric'){
+    stop('Error: input probabilites must be a numeric vector!')
+  }
+
+  if(max(probs)>1|min(probs)<0){
+    stop('Error: input probabilites must have values between, not including, 0 and 1')
+  }
 }
 
 if(length(x)<=2){
-  return(print('Error: input x must be of length 3 or greater'))
+  stop('Error: input x must be of length 3 or greater')
 }
 
 if(length(bounds)!=2&boundedness=='b'){
-  return(print('Error: must supply upper and lower bounds as a numeric vector (i.e. c(0,30))'))
+  stop('Error: must supply upper and lower bounds as a numeric vector (i.e. c(0,30))')
 }
 
 if(length(bounds)!=1&(boundedness=='su'|boundedness=='sl')){
-  return(print('Error: must supply one bound'))
+  stop('Error: must supply one bound')
 }
 
 if(boundedness=='su'){
@@ -84,28 +92,26 @@ if(boundedness=='sl'){
 }
 
 if(boundedness!='u'&boundedness!='su'&boundedness!='sl'&boundedness!='b'){
-  return(print('Error: boundedness parameter must be u, su, sl or b only'))
+  stop('Error: boundedness parameter must be u, su, sl or b only')
 }
 
 if(max(x)>bounds[2]&boundedness=='su'){
-  return(print('Error: for semi-upper bounded the upper bound must be greater than the largest value in x'))
+  stop('Error: for semi-upper bounded the upper bound must be greater than the largest value in x')
 }
 
 if(min(x)<bounds[1]&boundedness=='sl'){
-  return(print('Error: for semi-lower bounded the lower bound must be less than the smallest value in x'))
+  stop('Error: for semi-lower bounded the lower bound must be less than the smallest value in x')
 }
 
-if(term_limit%%1!=0){
-  return(print('Error: term_limit parameter should be an ineteger between 3 and 30'))
-}
+
 if(term_limit<3){
-  return(print('Error: term_limit should be 3 or greater'))
+  stop('Error: term_limit should be 3 or greater')
 }
 if(term_limit>30){
-  return(print('Error: term_limit parameter should be less than 30'))
+  stop('Error: term_limit parameter should be less than 30')
 }
 if(term_limit>length(x)){
-  return(print('Error: term_limit must be less than or equal to the length of the vector x'))
+  stop('Error: term_limit must be less than or equal to the length of the vector x')
 }
 
 ###############handle the probabilites###############
