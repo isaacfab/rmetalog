@@ -1,16 +1,16 @@
 #base rMetalog function here!
 
-#' Fit the Metalog distribution
+#' Fit the Metalog distribution to data
 #'
 #' @param x vector of numeric data
 #' @param step_len size of steps to evaluate the distribution (between 0 and 1)
 #' @param probs (Optional) probability quantiles, same length as \code{x}
-#' @param term_limit integer between 5 and 30, specifying number of metalog
-#'   terms to evaluate (default: 16)
-#' @param bounds numeric vector of size two, indicating lower/upper bounds
+#' @param bounds numeric vector specifying lower/upper bounds, if any
 #' @param boundedness character string specifying unbounded, semi-bounded upper,
 #'   semi-bounded lower or bounded; accepts values \code{u}, \code{su},
 #'   \code{sl} and \code{b} (default: 'u')
+#' @param term_limit integer between 5 and 30, specifying number of metalog distributions, with respective terms,
+#'   terms to build (default: 16)
 #'
 #' @return A list object with elements
 #' \item{Y}{a dataframe with the first column the raw data, second column the cummulative probabilites and the rest of the rows the Y matrix for each term}
@@ -32,20 +32,22 @@
 #'                       bounds=c(0, 60),
 #'                       boundedness = 'b',
 #'                       term_limit = 16)
+
 rMetalog <-
   function(x,
-           probs = NA,
            step_len = .01,
-           term_limit = 3,
+           probs = NA,
            bounds = c(0,1),
-           boundedness = 'u') {
+           boundedness = 'u',
+           term_limit = 16) {
 
 #create a list to hold all the objects
 myList<-list()
 
 ################# inital error checking ################
 if(class(x)!='numeric'){
-  stop('Input x must be a numeric vector!')
+  #stop('Input x must be a numeric vector!')
+  print(length(x))
 }
 
 if(class(bounds)!='numeric'){
@@ -116,7 +118,7 @@ if(term_limit>length(x)){
 
 ###############handle the probabilites###############
 #this also converts x as a data frame
-   if(probs[1] == 0){
+   if(is.na(probs)){
      x<-MLprobs(x,step_len=step_len)
    } else{
      x<-as.data.frame(x)
