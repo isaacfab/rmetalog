@@ -67,6 +67,8 @@ myMetalog <- rMetalog(fishSize$FishSize,
                       bounds=0,
                       boundedness = 'sl',
                       term_limit = 13)
+#> [1] "Building the metalog distributions now"
+#> [1] "Building distribution functions and samples"
 ```
 
 This function returns a list with the following components for use
