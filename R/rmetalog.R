@@ -3,14 +3,14 @@
 #' Fit the Metalog distribution to data
 #'
 #' @param x vector of numeric data
-#' @param step_len size of steps to evaluate the distribution (between 0 and 1)
-#' @param probs (Optional) probability quantiles, same length as \code{x}
 #' @param bounds numeric vector specifying lower/upper bounds, if any
 #' @param boundedness character string specifying unbounded, semi-bounded upper,
 #'   semi-bounded lower or bounded; accepts values \code{u}, \code{su},
 #'   \code{sl} and \code{b} (default: 'u')
 #' @param term_limit integer between 5 and 30, specifying number of metalog distributions, with respective terms,
 #'   terms to build (default: 16)
+#' @param step_len (Optional) size of steps to summarize the distribution (between 0 and 1)
+#' @param probs (Optional) probability quantiles, same length as \code{x}
 #'
 #' @return A list object with elements
 #' \item{Y}{a dataframe with the first column the raw data, second column the cummulative probabilites and the rest of the rows the Y matrix for each term}
@@ -28,10 +28,10 @@
 #'
 #' # Create a bounded metalog object
 #' myMetalog <- rMetalog(fishSize$FishSize,
-#'                       step_len = .001,
 #'                       bounds=c(0, 60),
 #'                       boundedness = 'b',
-#'                       term_limit = 16)
+#'                       term_limit = 16,
+#'                       step_len = .001,)
 
 rMetalog <-
   function(x,
@@ -46,8 +46,7 @@ myList<-list()
 
 ################# inital error checking ################
 if(class(x)!='numeric'){
-  #stop('Input x must be a numeric vector!')
-  print(length(x))
+  stop('Input x must be a numeric vector!')
 }
 
 if(class(bounds)!='numeric'){
@@ -164,7 +163,7 @@ if(term_limit>4){
         }
     }
 }
-  myList$Y<-x
+myList$Y<-x
 
 ###########build a vectors for each term###########
 A<-aVectorsMetalogLP(myList$Y,term_limit=term_limit,diff_error=.001,diff_step=0.001)

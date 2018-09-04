@@ -5,6 +5,7 @@ aVectorsMetalogOLS<-function(x,term_limit,diff){
 
   A<-data.frame()
   for (i in 1:(term_limit-1)){
+    #fix this matrix with a Y object
     Y<-as.matrix(x[,4:(i+4)])
     z<-as.matrix(x$z)
     a<-paste0('a',(i+1))
@@ -28,6 +29,7 @@ aVectorsMetalogLP<-function(x,term_limit,diff_error=.001,diff_step=0.001){
   pb<-progress::progress_bar$new(total=(term_limit-1))
   for (i in 1:(term_limit-1)){
     pb$tick()
+    #fix this matrix and the params
     Y<-as.matrix(x[,4:(i+4)])
     Y_neg=-(Y)
     new_Y<-matrix(c(Y[,1],Y_neg[,1]),ncol=2)

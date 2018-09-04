@@ -21,7 +21,8 @@ MLprobs <- function(x,step_len) {
       x$probs[i]<-(x$probs[i-1]+(1/l))
     }
   }
-  #if the data is very long we down convert to a smaller but representative vector
+  #if the data is very long we down convert to a smaller but representative vector using the step_len
+  #default is 0.001 which is a 109 element vector with fine values in the tail (tailstep)
   if(nrow(x)>100){
     y<-seq(step_len,(1-step_len),step_len)
     tailstep<-(step_len/10)
