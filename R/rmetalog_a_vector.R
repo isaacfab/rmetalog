@@ -1,17 +1,17 @@
 #working on improving the a vector estimation
 library(lpSolve)
 
-aVectorsMetalogOLS<-function(Ymat,x,term_limit,diff){
+aVectorsMetalogOLS<-function(Ymat,x,term_limit,term_lower_bound,diff){
 
   A<-data.frame()
   for (i in 1:(term_limit-1)){
     #fix this matrix with a Y object
-    Y<-as.matrix(Ymat[,1:(i+1)])
+    Y<-as.matrix(Ymat[,1:(i)])
     z<-as.matrix(x$z)
-    a<-paste0('a',(i+1))
+    a<-paste0('a',(i))
     #add error catching here for non invertable
     tempOG<-((solve(t(Y)%*%Y) %*% t(Y)) %*% z)
-    temp<-c(temp,rep(0,(term_limit-(i+1))))
+    temp<-c(temp,rep(0,(term_limit-(i))))
     ############################
     #this needs to be updated
     ############################
@@ -25,16 +25,16 @@ aVectorsMetalogOLS<-function(Ymat,x,term_limit,diff){
 return(A)
 }
 
-aVectorsMetalogLP<-function(Ymat,x,term_limit,diff_error=.001,diff_step=0.001){
+aVectorsMetalogLP<-function(Ymat,x,term_limit,term_lower_bound,diff_error=.001,diff_step=0.001){
 
   A<-data.frame()
   cnames<-c()
   print('Building the metalog distributions now', row.names=FALSE)
-  pb<-progress::progress_bar$new(total=(term_limit-1))
-  for (i in 1:(term_limit-1)){
+  pb<-progress::progress_bar$new(total=(term_limit-(term_lower_bound-1)))
+  for (i in term_lower_bound:term_limit){
     pb$tick()
 
-    Y<-as.matrix(Ymat[,1:(i+1)])
+    Y<-as.matrix(Ymat[,1:(i)])
 
     #bulding the objective function using abs value LP formulation
     Y_neg=-(Y)
@@ -44,7 +44,7 @@ aVectorsMetalogLP<-function(Ymat,x,term_limit,diff_error=.001,diff_step=0.001){
       new_Y<-cbind(new_Y,Y_neg[,c])
     }
     z<-as.matrix(x$z)
-    a<-paste0('a',(i+1))
+    a<-paste0('a',(i))
     cnames<-c(cnames,a)
     #building the constraint matrix
     error_mat<-c()
@@ -63,7 +63,7 @@ aVectorsMetalogLP<-function(Ymat,x,term_limit,diff_error=.001,diff_step=0.001){
 
     new<-cbind(error_mat,new_Y)
 
-    diff_mat<-diffMatMetalog(i+1,diff_step)
+    diff_mat<-diffMatMetalog(i,diff_step)
     diff_zeros<-c()
     for(t in 1:length(diff_mat[,1])){
       zeros_temp<-rep(0,(2*(length(Y[,1]))))
@@ -76,7 +76,7 @@ aVectorsMetalogLP<-function(Ymat,x,term_limit,diff_error=.001,diff_step=0.001){
 
 
     #objective function coeficients
-    f.obj<-c(rep(1,(2*length(Y[,1]))),rep(0,(2*(i+1))))
+    f.obj<-c(rep(1,(2*length(Y[,1]))),rep(0,(2*(i))))
     #constraint matrix
     f.con<-lp_mat
     #symbol vector
@@ -95,10 +95,8 @@ aVectorsMetalogLP<-function(Ymat,x,term_limit,diff_error=.001,diff_step=0.001){
     }
 
     #append zeros for term limit
-    temp<-c(temp,rep(0,(term_limit-(i+1))))
-    ############################
-    #this needs to be updated
-    ############################
+    temp<-c(temp,rep(0,(term_limit-(i))))
+
     if(length(A)!=0){
       A<-cbind(A,temp)
     }

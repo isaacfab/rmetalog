@@ -33,8 +33,6 @@ To install the package from this repository use the following:
 ```{r eval=FALSE}
 library(devtools)
 install_github('isaacfab/RMetalog')
-```
-```{r}
 library(RMetalog)
 ```
 
@@ -65,11 +63,11 @@ In order to create a metalog distribution use the function and assign the output
 build the distributions.
 
 ```{r}
-myMetalog <- rMetalog(fishSize$FishSize,
-                      step_len = .01,
-                      bounds=0,
-                      boundedness = 'sl',
-                      term_limit = 13)
+my_metalog <- r_metalog(fishSize$FishSize,
+                       step_len = .01,
+                       bounds=0,
+                       boundedness = 'sl',
+                       term_limit = 9)
 ```
 
 This function returns a list with the following components for use
@@ -83,28 +81,27 @@ This function returns a list with the following components for use
 Evalute the list contents  
 
 ```{r eval=FALSE}
-str(myMetalog)
+str(my_metalog)
 ```
   
 The validation check is useful to see what terms returned a valid density function  
 
 ```{r}
-print(myMetalog$Validation, row.names=FALSE)
+print(my_metalog$Validation, row.names=FALSE)
 ```
 
 You can now plot some of the results using  
 
 ```{r message=FALSE, warning=FALSE}
-myMetalog$GridPlotPDF
+my_metalog$GridPlotPDF
 ```  
 
 ```{r message=FALSE, warning=FALSE}
-myMetalog$GridPlotCDF
+my_metalog$GridPlotCDF
 ```
 
 As this package evolves this list will include some additional functionality
 
-* improved error checking
 * sampling function
 
 

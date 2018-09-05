@@ -7,8 +7,10 @@
 #' @param boundedness character string specifying unbounded, semi-bounded upper,
 #'   semi-bounded lower or bounded; accepts values \code{u}, \code{su},
 #'   \code{sl} and \code{b} (default: 'u')
-#' @param term_limit integer between 5 and 30, specifying number of metalog distributions, with respective terms,
+#' @param term_limit integer between 3 and 30, specifying number of metalog distributions, with respective terms,
 #'   terms to build (default: 13)
+#' @param term_lower_bound (Optional) the smallest term to generate, used to minimze
+#'  computation must be less than term_limit (default is 2)
 #' @param step_len (Optional) size of steps to summarize the distribution (between 0 and 1)
 #' @param probs (Optional) probability quantiles, same length as \code{x}
 #'
@@ -28,19 +30,20 @@
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
-#' myMetalog <- rMetalog(fishSize$FishSize,
+#' myMetalog <- r_metalog(fishSize$FishSize,
 #'                       bounds=c(0, 60),
 #'                       boundedness = 'b',
 #'                       term_limit = 16,
 #'                       step_len = .001,)
 
-rMetalog <-
+r_metalog <-
   function(x,
            step_len = .01,
            probs = NA,
            bounds = c(0,1),
            boundedness = 'u',
-           term_limit = 13) {
+           term_limit = 13,
+           term_lower_bound = 2) {
 
 #create a list to hold all the objects
 myList<-list()
@@ -56,6 +59,10 @@ if(class(bounds)!='numeric'){
 
 if(term_limit%%1!=0){
   stop('Error: term_limit parameter should be an integer between 3 and 30')
+}
+
+if(term_lower_bound%%1!=0){
+  stop('Error: term_lower_bound parameter should be an integer')
 }
 
 if(!is.na(probs) & (length(probs)!=length(x))){
@@ -125,7 +132,12 @@ if(term_limit>30){
 if(term_limit>length(x)){
   stop('Error: term_limit must be less than or equal to the length of the vector x')
 }
-
+if(term_lower_bound>term_limit){
+  stop('Error: term_lower_bound must be less than or equal to term_limit')
+}
+if(term_lower_bound<2){
+  stop('Error: term_lower_bound must have a value of 2 or greater')
+}
 ###############handle the probabilites###############
 #this also converts x as a data frame
    if(is.na(probs)){
@@ -179,7 +191,12 @@ if(term_limit>4){
 myList$Y<-Y
 
 ###########build a vectors for each term###########
-myList$A<-aVectorsMetalogLP(myList$Y,myList$dataValues,term_limit=term_limit,diff_error=.001,diff_step=0.001)
+myList$A<-aVectorsMetalogLP(Y=myList$Y,
+                            x=myList$dataValues,
+                            term_limit=term_limit,
+                            term_lower_bound=term_lower_bound,
+                            diff_error=.001,
+                            diff_step=0.001)
 
 ##############build the metalog m(pdf) and M(quantile) dataframes###############
 y<-seq(step_len,(1-step_len),step_len)
@@ -187,12 +204,15 @@ y<-seq(step_len,(1-step_len),step_len)
 Mh<-data.frame()
 print('Building distribution functions and samples', row.names=FALSE)
 pbP<-progress::progress_bar$new(total=(term_limit-1))
-for(i in 2:term_limit){
+
+cnames<-c()
+
+for(i in term_lower_bound:term_limit){
   pbP$tick()
   a_name<-paste0('a',i)
   m_name<-paste0('m',i)
   M_name<-paste0('M',i)
-
+  cnames<-c(cnames,m_name,M_name)
 #build pdf
   m<-pdfMetalog(myList$A[`a_name`][,1],y[1],term_limit,bounds=bounds,boundedness=boundedness)
 
@@ -224,15 +244,18 @@ for(i in 2:term_limit){
     M<-c(bounds[1],M,bounds[2])
   }
 
+  if(length(Mh)!=0){
+    Mh<-cbind(Mh,m)
+    Mh<-cbind(Mh,M)
+  }
   if(length(Mh)==0){
-    Mh<-data.frame(m2=m,M2=M)
+    Mh<-as.data.frame(m)
+    Mh<-cbind(Mh,M)
   }
 
-  if(length(M)!=0){
-     Mh[`m_name`]<-m
-     Mh[`M_name`]<-M
-  }
-}#close for loop
+
+}#close for loop and name the columns
+colnames(Mh)<-cnames
 
 #adding the y values for the bounded models
 if(boundedness=='sl'){
@@ -252,13 +275,20 @@ Mh$y<-y
 myList$M<-Mh
 
 #build plots
-InitalResults<-data.frame(term=(rep(c('2 Terms'),length(Mh[,1]))),pdfValues=Mh$m2,quantileValues=Mh$M2,cumValue=Mh$y)
+InitalResults<-data.frame(term=(rep(paste0(term_lower_bound,' Terms'),length(Mh[,1]))),
+                          pdfValues=Mh[,1],
+                          quantileValues=Mh[,2],
+                          cumValue=Mh$y)
+if(ncol(Mh)>3){
+  for(i in 2:(length(Mh[1,]-1)/2)){
+    TempResults<-data.frame(term=(rep(paste0((term_lower_bound+(i-1)),' Terms'),length(Mh[,1]))),
+                                      pdfValues=Mh[,(i*2-1)],
+                                      quantileValues=Mh[,(i*2)],
+                                      cumValue=Mh$y)
 
-for(i in 2:(length(Mh[1,]-1)/2)){
-  TempResults<-data.frame(term=(rep(paste0((i+1),' Terms'),length(Mh[,1]))),pdfValues=Mh[,(i*2-1)],quantileValues=Mh[,(i*2)],cumValue=Mh$y)
-  InitalResults<-rbind(InitalResults,TempResults)
+    InitalResults<-rbind(InitalResults,TempResults)
+  }
 }
-
 # The base plot
 q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=pdfValues)) + ggplot2::geom_line()
 #q$term<-as.factor(q$term)
@@ -283,7 +313,7 @@ myList$GridPlotCDF<-q
 #########pdf validation################
 y<-c()
 t<-c()
-for(i in 2:term_limit){
+for(i in term_lower_bound:term_limit){
   m<-paste0('m',i)
   x<-pdfMetalogValidation(myList$M[`m`])
   t<-c(t,i)
