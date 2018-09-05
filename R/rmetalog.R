@@ -8,12 +8,13 @@
 #'   semi-bounded lower or bounded; accepts values \code{u}, \code{su},
 #'   \code{sl} and \code{b} (default: 'u')
 #' @param term_limit integer between 5 and 30, specifying number of metalog distributions, with respective terms,
-#'   terms to build (default: 16)
+#'   terms to build (default: 13)
 #' @param step_len (Optional) size of steps to summarize the distribution (between 0 and 1)
 #' @param probs (Optional) probability quantiles, same length as \code{x}
 #'
 #' @return A list object with elements
-#' \item{Y}{a dataframe with the first column the raw data, second column the cummulative probabilites and the rest of the rows the Y matrix for each term}
+#' \item{dataValues}{a dataframe with the first column the raw data, second column the cummulative probabilites and the third the z vector}
+#' \item{Y}{The Y matrix values for each quantile and term}
 #' \item{A}{a dataframe of coeficients for each metalog distribution}
 #' \item{M}{a dataframe of quantiles (M) and probilites (m) indexed for each term (i.e. M3,m3 for the third term)}
 #' \item{GridPlotCDF()}{a function that displays a grid plot of the CDF for each term}
@@ -39,7 +40,7 @@ rMetalog <-
            probs = NA,
            bounds = c(0,1),
            boundedness = 'u',
-           term_limit = 16) {
+           term_limit = 13) {
 
 #create a list to hold all the objects
 myList<-list()
@@ -77,9 +78,20 @@ if(length(x)<=2){
 }
 
 if(length(bounds)!=2&boundedness=='b'){
-  stop('Error: must supply upper and lower bounds as a numeric vector (i.e. c(0,30))')
+  stop('Error: must supply only upper and lower bounds as a numeric vector (i.e. c(0,30))')
 }
 
+if(max(bounds)<min(bounds)&boundedness=='b'){
+  stop('Error: upper bound must be greater than lower bound')
+}
+
+if(min(x)<min(bounds)&boundedness=='b'){
+  stop('Error: lower bound must be less that the smallest value of x')
+}
+
+if(max(bounds)<max(x)&boundedness=='b'){
+  stop('Error: upper bound must be greater than the largest value of x')
+}
 if(length(bounds)!=1&(boundedness=='su'|boundedness=='sl')){
   stop('Error: must supply one bound')
 }
@@ -103,7 +115,6 @@ if(max(x)>bounds[2]&boundedness=='su'){
 if(min(x)<bounds[1]&boundedness=='sl'){
   stop('Error: for semi-lower bounded the lower bound must be less than the smallest value in x')
 }
-
 
 if(term_limit<3){
   stop('Error: term_limit should be 3 or greater')
@@ -139,14 +150,16 @@ if(term_limit>length(x)){
     x$z<-log((x[,1]-bounds[1])/(bounds[2]-x[,1]))
   }
 
+myList$dataValues<-x
+Y<-data.frame(y1=rep(1,nrow(x)))
 ################construct the Y Matrix initial values################
 pbY<-progress::progress_bar$new(total=(term_limit-1))
-  x$y1<-1
-  x$y2<-(log(x$probs/(1-x$probs)))
-  x$y3<-(x$probs-0.5)*x$y2
+
+  Y$y2<-(log(x$probs/(1-x$probs)))
+  Y$y3<-(x$probs-0.5)*Y$y2
   pbY$tick()
 if(term_limit>3){
-  x$y4<-x$probs-0.5
+  Y$y4<-x$probs-0.5
   pbY$tick()
 }
 #####complete the values through the term limit#####
@@ -155,19 +168,18 @@ if(term_limit>4){
         pbY$tick()
         y<-paste0('y',i)
         if(i %% 2 != 0){
-         x[`y`]<-x$y4^(i%/%2)
+         Y[`y`]<-Y$y4^(i%/%2)
         }
         if(i %% 2 == 0){
          z<-paste0('y',(i-1))
-         x[`y`]<-x$y2*x[`z`]
+         Y[`y`]<-Y$y2*Y[`z`]
         }
     }
 }
-myList$Y<-x
+myList$Y<-Y
 
 ###########build a vectors for each term###########
-A<-aVectorsMetalogLP(myList$Y,term_limit=term_limit,diff_error=.001,diff_step=0.001)
-  myList$A<-A
+myList$A<-aVectorsMetalogLP(myList$Y,myList$dataValues,term_limit=term_limit,diff_error=.001,diff_step=0.001)
 
 ##############build the metalog m(pdf) and M(quantile) dataframes###############
 y<-seq(step_len,(1-step_len),step_len)

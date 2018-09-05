@@ -1,17 +1,20 @@
 #working on improving the a vector estimation
 library(lpSolve)
 
-aVectorsMetalogOLS<-function(x,term_limit,diff){
+aVectorsMetalogOLS<-function(Ymat,x,term_limit,diff){
 
   A<-data.frame()
   for (i in 1:(term_limit-1)){
     #fix this matrix with a Y object
-    Y<-as.matrix(x[,4:(i+4)])
+    Y<-as.matrix(Ymat[,1:(i+1)])
     z<-as.matrix(x$z)
     a<-paste0('a',(i+1))
     #add error catching here for non invertable
     tempOG<-((solve(t(Y)%*%Y) %*% t(Y)) %*% z)
     temp<-c(temp,rep(0,(term_limit-(i+1))))
+    ############################
+    #this needs to be updated
+    ############################
     if(length(A)==0){
       A<-data.frame(a2=temp)
     }
@@ -22,15 +25,18 @@ aVectorsMetalogOLS<-function(x,term_limit,diff){
 return(A)
 }
 
-aVectorsMetalogLP<-function(x,term_limit,diff_error=.001,diff_step=0.001){
+aVectorsMetalogLP<-function(Ymat,x,term_limit,diff_error=.001,diff_step=0.001){
 
   A<-data.frame()
+  cnames<-c()
   print('Building the metalog distributions now', row.names=FALSE)
   pb<-progress::progress_bar$new(total=(term_limit-1))
   for (i in 1:(term_limit-1)){
     pb$tick()
-    #fix this matrix and the params
-    Y<-as.matrix(x[,4:(i+4)])
+
+    Y<-as.matrix(Ymat[,1:(i+1)])
+
+    #bulding the objective function using abs value LP formulation
     Y_neg=-(Y)
     new_Y<-matrix(c(Y[,1],Y_neg[,1]),ncol=2)
     for(c in 2:length(Y[1,])){
@@ -39,10 +45,10 @@ aVectorsMetalogLP<-function(x,term_limit,diff_error=.001,diff_step=0.001){
     }
     z<-as.matrix(x$z)
     a<-paste0('a',(i+1))
-
+    cnames<-c(cnames,a)
     #building the constraint matrix
     error_mat<-c()
-    for(j in 1:length(Y[,1])){
+    for(j in 1:nrow(Y)){
       front_zeros<-rep(0,(2*(j-1)))
       ones<-c(1,-1)
       trail_zeroes<-rep(0,(2*(length(Y[,1])-j)))
@@ -90,13 +96,18 @@ aVectorsMetalogLP<-function(x,term_limit,diff_error=.001,diff_step=0.001){
 
     #append zeros for term limit
     temp<-c(temp,rep(0,(term_limit-(i+1))))
-    if(length(A)==0){
-      A<-data.frame(a2=temp)
-    }
+    ############################
+    #this needs to be updated
+    ############################
     if(length(A)!=0){
-      A[`a`]<-temp
+      A<-cbind(A,temp)
     }
+    if(length(A)==0){
+      A<-as.data.frame(temp)
+    }
+
   }#close the for loop
+  colnames(A)<-cnames
   return(A)
 }#close the function
 
