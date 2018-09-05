@@ -64,7 +64,7 @@ In order to create a metalog distribution use the function and assign the output
 
 build the distributions.
 
-```{r echo=FALSE}
+```{r}
 my_metalog <- r_metalog(fishSize$FishSize,
                        step_len = .01,
                        bounds=0,

@@ -59,8 +59,15 @@ In order to create a metalog distribution use the function and assign the output
 
 build the distributions.
 
-    #> [1] "Building the metalog distributions now"
-    #> [1] "Building distribution functions and samples"
+``` r
+my_metalog <- r_metalog(fishSize$FishSize,
+                       step_len = .01,
+                       bounds=0,
+                       boundedness = 'sl',
+                       term_limit = 9)
+#> [1] "Building the metalog distributions now"
+#> [1] "Building distribution functions and samples"
+```
 
 This function returns a list with the following components for use
 
