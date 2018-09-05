@@ -290,26 +290,33 @@ if(ncol(Mh)>3){
   }
 }
 # The base plot
-q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=pdfValues)) + ggplot2::geom_line()
-#q$term<-as.factor(q$term)
+q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=pdfValues)) +
+                                    ggplot2::geom_line(colour="blue") +
+                                    ggplot2::xlab("Quantile Values") +
+                                    ggplot2::ylab("PDF Values") +
+                                    ggplot2::theme_bw()
 
 # Faceted using subpanels
-q<-q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
+q <- q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
 
 q
 
-myList$GridPlotPDF<-q
+myList$GridPlotPDF <- q
 
 # The base plot
-q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=cumValue)) + ggplot2::geom_line()
+q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=cumValue)) +
+                      ggplot2::geom_line(colour="blue") +
+                      ggplot2::xlab("Quantile Values") +
+                      ggplot2::ylab("CDF Values") +
+                      ggplot2::theme_bw()
 #q$term<-as.factor(q$term)
 
 # Faceted using subpanels
-q<-q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
+q <- q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
 
 q
 
-myList$GridPlotCDF<-q
+myList$GridPlotCDF <- q
 #########pdf validation################
 y<-c()
 t<-c()

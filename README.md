@@ -24,13 +24,10 @@ library(devtools)
 install_github('isaacfab/RMetalog')
 ```
 
+Once the package is loaded you start with a data set of continuous observations. For this repository we will load the library and use an example of fish size measurements from the Pacific Northwest. This data set is illustrative to demonstrate the flexibility of the metalog distribution. The data frame is installed with the package.
+
 ``` r
 library(RMetalog)
-```
-
-Once the package is loaded you start with a data set of continuous observations. For this repository we will use an example of fish size measurements from the Pacific Northwest. This data set is illustrative to demonstrate the flexibility of the metalog distribution. The data frame is installed with the package.
-
-``` r
 data("fishSize")
 summary(fishSize)
 #>     FishSize    
@@ -45,31 +42,25 @@ summary(fishSize)
 The base function for the package is the call of the rMetalog distribution
 
 ``` r
-rMetalog()
+r_metalog()
 ```
 
 This function takes several inputs:
 
--   data - vector of numeric data
--   probs - probability quantiles (optional but must be the same length as data vector)
--   step\_len - size of steps to evaluate the distribution (some value between 0 and 1)
--   boundedness - unbounded, semi-bounded upper, semi-bounded lower or bounded: only values u, su, sl and b are accepted (defaults to 'u')
--   bounds - the values of the bounds if upper, lower or bounded (must be two numeric values lower and upper)
--   term\_limit - the number of metalog terms to evaluate (must be an integer greater than or equal to 3 and less than 30, defaults to 3)
+-   x - vector of numeric data
+-   bounds - numeric vector specifying lower or upper bounds, if any
+-   boundedness - character string specifying unbounded, semi-bounded upper, semi-bounded lower or bounded; accepts values u, su, sl and b (default: 'u')
+-   term\_limit - integer between 3 and 30, specifying number of metalog distributions, with respective terms, terms to build (default: 13)
+-   term\_lower\_bound - (Optional) the smallest term to generate, used to minimize computation must be less than term\_limit (default is 2)
+-   step\_len - (Optional) size of steps to summarize the distribution (between 0 and 1)
+-   probs - (Optional) probability quantiles, same length as x
 
 In order to create a metalog distribution use the function and assign the output to a variable (myMetalog).
 
 build the distributions.
 
-``` r
-myMetalog <- rMetalog(fishSize$FishSize,
-                      step_len = .01,
-                      bounds=0,
-                      boundedness = 'sl',
-                      term_limit = 13)
-#> [1] "Building the metalog distributions now"
-#> [1] "Building distribution functions and samples"
-```
+    #> [1] "Building the metalog distributions now"
+    #> [1] "Building distribution functions and samples"
 
 This function returns a list with the following components for use
 
@@ -82,13 +73,13 @@ This function returns a list with the following components for use
 Evalute the list contents
 
 ``` r
-str(myMetalog)
+str(my_metalog)
 ```
 
 The validation check is useful to see what terms returned a valid density function
 
 ``` r
-print(myMetalog$Validation, row.names=FALSE)
+print(my_metalog$Validation, row.names=FALSE)
 #>  term valid
 #>     2   yes
 #>     3   yes
@@ -98,27 +89,22 @@ print(myMetalog$Validation, row.names=FALSE)
 #>     7   yes
 #>     8   yes
 #>     9   yes
-#>    10   yes
-#>    11   yes
-#>    12   yes
-#>    13   yes
 ```
 
 You can now plot some of the results using
 
 ``` r
-myMetalog$GridPlotPDF
+my_metalog$GridPlotPDF
+```
+
+![](README-unnamed-chunk-8-1.png)
+
+``` r
+my_metalog$GridPlotCDF
 ```
 
 ![](README-unnamed-chunk-9-1.png)
 
-``` r
-myMetalog$GridPlotCDF
-```
-
-![](README-unnamed-chunk-10-1.png)
-
 As this package evolves this list will include some additional functionality
 
--   improved error checking
 -   sampling function
