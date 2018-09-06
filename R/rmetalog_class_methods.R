@@ -54,7 +54,19 @@ rmetalog_sample.rmetalog <- function(x,n=1,term=3){
 #'
 #' summary(myMetalog)
 summary.rmetalog <- function(x){
-  print('Object is of calss rmetalog')
+  cat(' -----------------------------------------------\n',
+      'Summary of Metalog Distribution Object\n',
+      '-----------------------------------------------\n',
+      '\nParameters\n',
+      'Term Limit: ',x$params$term_limit, '\n',
+      'Term Lower Bound: ',x$params$term_lower_bound, '\n',
+      'Boundedness: ',x$params$boundedness, '\n',
+      'Bounds (only used based on boundedness): ',x$params$bounds, '\n',
+      'Step Length for Distribution Summary: ',x$params$step_len, '\n',
+      '\n\n Validation and Fit Method\n'
+  )
+  print(x$Validation,row.names=FALSE)
+
 }
 
 #' Plot of the metalog object

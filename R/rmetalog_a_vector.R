@@ -17,7 +17,7 @@ a_vector_OLS_and_LP<-function(myList,term_limit,term_lower_bound,bounds,boundedn
     Y<-as.matrix(myList$Y[,1:(i)])
     z<-as.matrix(myList$dataValues$z)
     y<-myList$dataValues$probs
-
+    methodFit<-'OLS'
     a<-paste0('a',(i))
     m_name<-paste0('m',i)
     M_name<-paste0('M',i)
@@ -32,6 +32,7 @@ a_vector_OLS_and_LP<-function(myList,term_limit,term_lower_bound,bounds,boundedn
                           term_lower_bound=i,
                           diff_error=diff_error,
                           diff_step=diff_step)
+        methodFit<-'Linear Program'
     }
 
     temp<-c(temp,rep(0,(term_limit-(i))))
@@ -51,6 +52,7 @@ a_vector_OLS_and_LP<-function(myList,term_limit,term_lower_bound,bounds,boundedn
                             diff_error=diff_error,
                             diff_step=diff_step)
           temp<-c(temp,rep(0,(term_limit-(i))))
+          methodFit<-'Linear Program'
           #get the list and quantile values back for validation
           tempList<-pdf_quantile_builder(temp,
                                          y,
@@ -73,7 +75,7 @@ a_vector_OLS_and_LP<-function(myList,term_limit,term_lower_bound,bounds,boundedn
     if(length(A)==0){
       A<-as.data.frame(temp)
     }
-    tempValidation<-data.frame(term=i,valid=tempList$valid)
+    tempValidation<-data.frame(term=i,valid=tempList$valid,method=methodFit)
     Validation<-rbind(Validation,tempValidation)
   }#close the for loop
   colnames(A)<-c_a_names

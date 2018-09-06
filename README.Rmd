@@ -44,7 +44,7 @@ data("fishSize")
 summary(fishSize)
 ```
 
-The base function for the package is the call of the rMetalog distribution
+The base function for the package to create distributions is
 
 ```{r eval=FALSE}
 r_metalog()
@@ -53,39 +53,25 @@ r_metalog()
 This function takes several inputs:
 
 * x - vector of numeric data
-* bounds - numeric vector specifying lower or upper bounds, if any
-* boundedness - character string specifying unbounded, semi-bounded upper, semi-bounded lower or bounded; accepts values u, su, sl and b (default: 'u')
 * term_limit - integer between 3 and 30, specifying number of metalog distributions, with respective terms, terms to build (default: 13)
+* bounds - numeric vector specifying lower or upper bounds, none requred if distribution is unbounded
+* boundedness - character string specifying unbounded, semi-bounded upper, semi-bounded lower or bounded; accepts values u, su, sl and b (default: 'u')
 * term_lower_bound - (Optional) the smallest term to generate, used to minimize computation must be less than term_limit (default is 2)
 * step_len - (Optional) size of steps to summarize the distribution (between 0 and 1)
 * probs - (Optional) probability quantiles, same length as x
 
-In order to create a metalog distribution use the function and assign the output to a variable (my_metalog).  
-
-build the distributions.
+Here is an example of a lower bounded distribution build.
 
 ```{r}
 my_metalog <- r_metalog(fishSize$FishSize,
-                       step_len = .01,
-                       bounds=0,
-                       boundedness = 'sl',
-                       term_limit = 13)
+                       term_limit = 9,
+                       term_lower_bound = 9,
+                       bounds=c(1,34),
+                       boundedness = 'b',
+                       step_len = .01)
 ```
 
-This function returns an object with the following components for use
-
-* quantiles for each term (M matrix) where the term is the following interger so M4 is the fourth term
-* probability for each step (m matrix) where the term is the following interger so m4 is the fourth term
-* a matrix for calculation of probabilities
-* a validation vector on the results of each term evaluated
-
-The function returns an object of class `rmetalog` and `list`  
-
-```{r}
-class(my_metalog)
-```
-
-You can get a summary of the distributions using the `summary` function.
+The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
 
 ```{r}
 summary(my_metalog)
@@ -97,9 +83,6 @@ You can also plot a quick visaul comparison of the distributions by term.
 plot(my_metalog)
 ```  
 
-```{r message=FALSE, warning=FALSE}
-my_metalog$GridPlotCDF
-```
 
 
 
