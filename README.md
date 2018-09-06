@@ -64,9 +64,7 @@ my_metalog <- r_metalog(fishSize$FishSize,
                        step_len = .01,
                        bounds=0,
                        boundedness = 'sl',
-                       term_limit = 9)
-#> [1] "Building the metalog distributions now"
-#> [1] "Building distribution functions and samples"
+                       term_limit = 13)
 ```
 
 This function returns a list with the following components for use
@@ -96,6 +94,10 @@ print(my_metalog$Validation, row.names=FALSE)
 #>     7   yes
 #>     8   yes
 #>     9   yes
+#>    10   yes
+#>    11   yes
+#>    12   yes
+#>    13   yes
 ```
 
 You can now plot some of the results using

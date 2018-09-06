@@ -35,8 +35,7 @@
 #' myMetalog <- r_metalog(fishSize$FishSize,
 #'                       bounds=c(0, 60),
 #'                       boundedness = 'b',
-#'                       term_limit = 16,
-#'                       step_len = .01,)
+#'                       term_limit = 13)
 
 r_metalog <-
   function(x,

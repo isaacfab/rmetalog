@@ -7,7 +7,7 @@ Maintainer: Isaac Faber <isaacfab@gmail.com>
 Description: Implementation of the metalog distrubution in R.
 Imports:
     lpSolve,
-    progress
+    ggplot2
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
