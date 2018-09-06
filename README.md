@@ -75,44 +75,36 @@ This function returns a list with the following components for use
 -   a validation vector on the results of each term evaluated
 -   pannel plots for pdf's and cdf's for exploration
 
-Evalute the list contents
+The function returns an object of class `rmetalog` and `list`
 
 ``` r
-str(my_metalog)
+class(my_metalog)
+#> [1] "rmetalog" "list"
 ```
 
-The validation check is useful to see what terms returned a valid density function
+You can get a summary of the distributions using the `summary` function
 
 ``` r
-print(my_metalog$Validation, row.names=FALSE)
-#>  term valid
-#>     2   yes
-#>     3   yes
-#>     4   yes
-#>     5   yes
-#>     6   yes
-#>     7   yes
-#>     8   yes
-#>     9   yes
-#>    10   yes
-#>    11   yes
-#>    12   yes
-#>    13   yes
+summary(my_metalog)
+#> [1] "Object is of calss rmetalog"
 ```
 
-You can now plot some of the results using
+You can also plot some of the results using
 
 ``` r
-my_metalog$GridPlotPDF
+plot(my_metalog)
 ```
 
 ![](README-unnamed-chunk-8-1.png)
 
+    #> Press [enter] to see CDF plot
+
+![](README-unnamed-chunk-8-2.png)
+
 ``` r
 my_metalog$GridPlotCDF
+#> NULL
 ```
-
-![](README-unnamed-chunk-9-1.png)
 
 As this package evolves this list will include some additional functionality
 

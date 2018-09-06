@@ -1,4 +1,4 @@
-#base rMetalog function here!
+# base r_metalog function here!
 
 #' Fit the Metalog distribution to data
 #'
@@ -36,15 +36,13 @@
 #'                       bounds=c(0, 60),
 #'                       boundedness = 'b',
 #'                       term_limit = 13)
-
-r_metalog <-
-  function(x,
-           bounds = c(0,1),
-           boundedness = 'u',
-           term_limit = 13,
-           term_lower_bound = 2,
-           step_len = 0.01,
-           probs = NA) {
+r_metalog <- function(x,
+                      bounds = c(0,1),
+                      boundedness = 'u',
+                      term_limit = 13,
+                      term_lower_bound = 2,
+                      step_len = 0.01,
+                      probs = NA) {
 
 
 ################# inital error checking ################
@@ -208,49 +206,7 @@ myList<-a_vector_OLS_and_LP(myList,
                             diff_error=.001,
                             diff_step=0.001)
 
-#build plots
-InitalResults<-data.frame(term=(rep(paste0(term_lower_bound,' Terms'),length(myList$M[,1]))),
-                          pdfValues=myList$M[,1],
-                          quantileValues=myList$M[,2],
-                          cumValue=myList$M$y)
-if(ncol(myList$M)>3){
-  for(i in 2:(length(myList$M[1,]-1)/2)){
-    TempResults<-data.frame(term=(rep(paste0((term_lower_bound+(i-1)),' Terms'),length(myList$M[,1]))),
-                                      pdfValues=myList$M[,(i*2-1)],
-                                      quantileValues=myList$M[,(i*2)],
-                                      cumValue=myList$M$y)
-
-    InitalResults<-rbind(InitalResults,TempResults)
-  }
-}
-# The base plot
-q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=pdfValues)) +
-                                    ggplot2::geom_line(colour="blue") +
-                                    ggplot2::xlab("Quantile Values") +
-                                    ggplot2::ylab("PDF Values") +
-                                    ggplot2::theme_bw()
-
-# Faceted using subpanels
-q <- q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
-
-q
-
-myList$GridPlotPDF <- q
-
-# The base plot
-q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=cumValue)) +
-                      ggplot2::geom_line(colour="blue") +
-                      ggplot2::xlab("Quantile Values") +
-                      ggplot2::ylab("CDF Values") +
-                      ggplot2::theme_bw()
-#q$term<-as.factor(q$term)
-
-# Faceted using subpanels
-q <- q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
-
-q
-
-myList$GridPlotCDF <- q
+class(myList) <- append("rmetalog", class(myList))
 
 return(myList)
 }

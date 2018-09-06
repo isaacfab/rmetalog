@@ -60,7 +60,7 @@ This function takes several inputs:
 * step_len - (Optional) size of steps to summarize the distribution (between 0 and 1)
 * probs - (Optional) probability quantiles, same length as x
 
-In order to create a metalog distribution use the function and assign the output to a variable (myMetalog).  
+In order to create a metalog distribution use the function and assign the output to a variable (my_metalog).  
 
 build the distributions.
 
@@ -72,38 +72,35 @@ my_metalog <- r_metalog(fishSize$FishSize,
                        term_limit = 13)
 ```
 
-This function returns a list with the following components for use
+This function returns an object with the following components for use
 
 * quantiles for each term (M matrix) where the term is the following interger so M4 is the fourth term
 * probability for each step (m matrix) where the term is the following interger so m4 is the fourth term
 * a matrix for calculation of probabilities
 * a validation vector on the results of each term evaluated
-* pannel plots for pdf's and cdf's for exploration
 
-Evalute the list contents  
-
-```{r eval=FALSE}
-str(my_metalog)
-```
-  
-The validation check is useful to see what terms returned a valid density function  
+The function returns an object of class `rmetalog` and `list`  
 
 ```{r}
-print(my_metalog$Validation, row.names=FALSE)
+class(my_metalog)
 ```
 
-You can now plot some of the results using  
+You can get a summary of the distributions using the `summary` function.
+
+```{r}
+summary(my_metalog)
+```
+  
+You can also plot a quick visaul comparison of the distributions by term. 
 
 ```{r message=FALSE, warning=FALSE}
-my_metalog$GridPlotPDF
+plot(my_metalog)
 ```  
 
 ```{r message=FALSE, warning=FALSE}
 my_metalog$GridPlotCDF
 ```
 
-As this package evolves this list will include some additional functionality
 
-* sampling function
 
 
