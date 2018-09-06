@@ -22,7 +22,7 @@ MLprobs <- function(x,step_len) {
     }
   }
   #if the data is very long we down convert to a smaller but representative vector using the step_len
-  #default is 0.001 which is a 109 element vector with fine values in the tail (tailstep)
+  #default is 0.01 which is a 109 element vector with fine values in the tail (tailstep)
   if(nrow(x)>100){
     y<-seq(step_len,(1-step_len),step_len)
     tailstep<-(step_len/10)
@@ -94,7 +94,7 @@ if(t>4){
 
 #quantile function
 quantileMetalog<-function(a,y,t,bounds=c(),boundedness='u'){
-  #error check that a is a numeric vector, y is a number between 0,1 and t is greater than a
+
   #some values for calculation
   f<-(y-0.5)
   l<-log(y/(1-y))
@@ -138,18 +138,7 @@ if(t>4){
  return(x)
 }
 
-#pdf validation function
-#call this feasibility
-pdfMetalogValidation <- function(x){
-  y<-min(x)
-  if(y>=0){
-    return('yes')
-  }
-  if(y<0){
-    return('no')
-  }
 
-}
 
 #function for returning the matrix of differentiation terms
 diffMatMetalog<-function(term_limit,step_len){

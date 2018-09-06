@@ -69,7 +69,7 @@ my_metalog <- r_metalog(fishSize$FishSize,
                        step_len = .01,
                        bounds=0,
                        boundedness = 'sl',
-                       term_limit = 9)
+                       term_limit = 13)
 ```
 
 This function returns a list with the following components for use

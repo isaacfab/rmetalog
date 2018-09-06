@@ -1,40 +1,100 @@
 #working on improving the a vector estimation
 library(lpSolve)
 
-aVectorsMetalogOLS<-function(Ymat,x,term_limit,term_lower_bound,diff){
-
+#this function will coduct a two stage metalog optimization. It will attempt an OLS original method and if it fails or is not valid will run the LP method
+a_vector_OLS_and_LP<-function(myList,term_limit,term_lower_bound,bounds,boundedness,diff_error=.001,diff_step=0.001){
+  #some place holder values
   A<-data.frame()
-  for (i in 1:(term_limit-1)){
+  c_a_names<-c()
+  c_m_names<-c()
+  Mh<-data.frame()
+  Validation<-data.frame()
+  #cat('Building the metalog distributions now')
+  #pb<-progress::progress_bar$new(total=(term_limit-(term_lower_bound-1)))
+  for (i in term_lower_bound:term_limit){
+    #pb$tick()
     #fix this matrix with a Y object
-    Y<-as.matrix(Ymat[,1:(i)])
-    z<-as.matrix(x$z)
+    Y<-as.matrix(myList$Y[,1:(i)])
+    z<-as.matrix(myList$dataValues$z)
+    y<-myList$dataValues$probs
+
     a<-paste0('a',(i))
-    #add error catching here for non invertable
-    tempOG<-((solve(t(Y)%*%Y) %*% t(Y)) %*% z)
+    m_name<-paste0('m',i)
+    M_name<-paste0('M',i)
+    c_m_names<-c(c_m_names,m_name,M_name)
+    c_a_names<-c(c_a_names,a)
+    #try to use the OLS approach
+    temp<-try(((solve(t(Y)%*%Y) %*% t(Y)) %*% z),silent = TRUE)
+    #if temp is not a valid numeric vector then move to LP
+    if(class(temp)!='matrix'){
+        temp<-a_vector_LP(myList,
+                          term_limit=i,
+                          term_lower_bound=i,
+                          diff_error=diff_error,
+                          diff_step=diff_step)
+    }
+
     temp<-c(temp,rep(0,(term_limit-(i))))
-    ############################
-    #this needs to be updated
-    ############################
-    if(length(A)==0){
-      A<-data.frame(a2=temp)
+
+    #get the list and quantile values back for validation
+    tempList<-pdf_quantile_builder(temp,
+                                   y,
+                                   term_limit=i,
+                                   bounds=bounds,
+                                   boundedness=boundedness)
+
+    #if it not a valid pdf run and the OLS version was used the LP version
+    if(tempList$valid=='no' & class(temp)=='numeric'){
+          temp<-a_vector_LP(myList,
+                            term_limit=i,
+                            term_lower_bound=i,
+                            diff_error=diff_error,
+                            diff_step=diff_step)
+          temp<-c(temp,rep(0,(term_limit-(i))))
+          #get the list and quantile values back for validation
+          tempList<-pdf_quantile_builder(temp,
+                                         y,
+                                         term_limit=i,
+                                         bounds=bounds,
+                                         boundedness=boundedness)
+    }
+
+    if(length(Mh)!=0){
+      Mh<-cbind(Mh,tempList$m)
+      Mh<-cbind(Mh,tempList$M)
+    }
+    if(length(Mh)==0){
+      Mh<-as.data.frame(tempList$m)
+      Mh<-cbind(Mh,tempList$M)
     }
     if(length(A)!=0){
-      A[`a`]<-temp
+      A<-cbind(A,temp)
     }
-  }
-return(A)
+    if(length(A)==0){
+      A<-as.data.frame(temp)
+    }
+    tempValidation<-data.frame(term=i,valid=tempList$valid)
+    Validation<-rbind(Validation,tempValidation)
+  }#close the for loop
+  colnames(A)<-c_a_names
+  colnames(Mh)<-c_m_names
+  myList$A<-A
+  myList$M<-Mh
+  myList$M$y<-tempList$y
+  myList$Validation<-Validation
+  return(myList)
 }
 
-aVectorsMetalogLP<-function(Ymat,x,term_limit,term_lower_bound,diff_error=.001,diff_step=0.001){
+a_vector_LP<-function(myList,term_limit,term_lower_bound,diff_error=.001,diff_step=0.001){
 
   A<-data.frame()
   cnames<-c()
-  print('Building the metalog distributions now', row.names=FALSE)
-  pb<-progress::progress_bar$new(total=(term_limit-(term_lower_bound-1)))
-  for (i in term_lower_bound:term_limit){
-    pb$tick()
 
-    Y<-as.matrix(Ymat[,1:(i)])
+  for (i in term_lower_bound:term_limit){
+
+
+    Y<-as.matrix(myList$Y[,1:(i)])
+    z<-as.matrix(myList$dataValues$z)
 
     #bulding the objective function using abs value LP formulation
     Y_neg=-(Y)
@@ -43,7 +103,6 @@ aVectorsMetalogLP<-function(Ymat,x,term_limit,term_lower_bound,diff_error=.001,d
       new_Y<-cbind(new_Y,Y[,c])
       new_Y<-cbind(new_Y,Y_neg[,c])
     }
-    z<-as.matrix(x$z)
     a<-paste0('a',(i))
     cnames<-c(cnames,a)
     #building the constraint matrix
@@ -95,7 +154,7 @@ aVectorsMetalogLP<-function(Ymat,x,term_limit,term_lower_bound,diff_error=.001,d
     }
 
     #append zeros for term limit
-    temp<-c(temp,rep(0,(term_limit-(i))))
+    #temp<-c(temp,rep(0,(term_limit-(i))))
 
     if(length(A)!=0){
       A<-cbind(A,temp)
@@ -106,7 +165,7 @@ aVectorsMetalogLP<-function(Ymat,x,term_limit,term_lower_bound,diff_error=.001,d
 
   }#close the for loop
   colnames(A)<-cnames
-  return(A)
+  return(temp)
 }#close the function
 
 

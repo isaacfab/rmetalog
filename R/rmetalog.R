@@ -11,10 +11,12 @@
 #'   terms to build (default: 13)
 #' @param term_lower_bound (Optional) the smallest term to generate, used to minimze
 #'  computation must be less than term_limit (default is 2)
-#' @param step_len (Optional) size of steps to summarize the distribution (between 0 and 1)
+#' @param step_len (Optional) size of steps to summarize the distribution (between 0 and 0.01) this is only used if the data vector
+#'  length is greater than 100. Use this if a specific fine grid fit is required. (default is 0.01)
 #' @param probs (Optional) probability quantiles, same length as \code{x}
 #'
-#' @return A list object with elements
+#' @return A metalog object with elements
+#' \item{params}{A list of the parameters used to create the metalog object}
 #' \item{dataValues}{a dataframe with the first column the raw data, second column the cummulative probabilites and the third the z vector}
 #' \item{Y}{The Y matrix values for each quantile and term}
 #' \item{A}{a dataframe of coeficients for each metalog distribution}
@@ -34,19 +36,17 @@
 #'                       bounds=c(0, 60),
 #'                       boundedness = 'b',
 #'                       term_limit = 16,
-#'                       step_len = .001,)
+#'                       step_len = .01,)
 
 r_metalog <-
   function(x,
-           step_len = .01,
-           probs = NA,
            bounds = c(0,1),
            boundedness = 'u',
            term_limit = 13,
-           term_lower_bound = 2) {
+           term_lower_bound = 2,
+           step_len = 0.01,
+           probs = NA) {
 
-#create a list to hold all the objects
-myList<-list()
 
 ################# inital error checking ################
 if(class(x)!='numeric'){
@@ -138,6 +138,18 @@ if(term_lower_bound>term_limit){
 if(term_lower_bound<2){
   stop('Error: term_lower_bound must have a value of 2 or greater')
 }
+if(step_len<=0|step_len>0.1){
+  stop('Error: step_len must be greater than 0 and less than 0.01')
+}
+
+#create a list to hold all the objects
+    myList<-list()
+    myList$params$bounds<-bounds
+    myList$params$boundedness<-boundedness
+    myList$params$term_limit<-term_limit
+    myList$params$term_lower_bound<-term_lower_bound
+    myList$params$step_len<-step_len
+
 ###############handle the probabilites###############
 #this also converts x as a data frame
    if(is.na(probs)){
@@ -146,7 +158,6 @@ if(term_lower_bound<2){
      x<-as.data.frame(x)
      x$probs<-probs
    }
-
 
 #########build the z vector based on the boundedness###########
    if(boundedness=='u'){
@@ -165,19 +176,17 @@ if(term_lower_bound<2){
 myList$dataValues<-x
 Y<-data.frame(y1=rep(1,nrow(x)))
 ################construct the Y Matrix initial values################
-pbY<-progress::progress_bar$new(total=(term_limit-1))
 
   Y$y2<-(log(x$probs/(1-x$probs)))
   Y$y3<-(x$probs-0.5)*Y$y2
-  pbY$tick()
+
 if(term_limit>3){
   Y$y4<-x$probs-0.5
-  pbY$tick()
 }
 #####complete the values through the term limit#####
 if(term_limit>4){
     for (i in 5:(term_limit)){
-        pbY$tick()
+
         y<-paste0('y',i)
         if(i %% 2 != 0){
          Y[`y`]<-Y$y4^(i%/%2)
@@ -190,101 +199,27 @@ if(term_limit>4){
 }
 myList$Y<-Y
 
-###########build a vectors for each term###########
-myList$A<-aVectorsMetalogLP(Y=myList$Y,
-                            x=myList$dataValues,
+############## build a vectors for each term and                   ###########
+############## build the metalog m(pdf) and M(quantile) dataframes ###############
+myList<-a_vector_OLS_and_LP(myList,
                             term_limit=term_limit,
                             term_lower_bound=term_lower_bound,
+                            bounds=bounds,
+                            boundedness=boundedness,
                             diff_error=.001,
                             diff_step=0.001)
 
-##############build the metalog m(pdf) and M(quantile) dataframes###############
-y<-seq(step_len,(1-step_len),step_len)
-
-Mh<-data.frame()
-print('Building distribution functions and samples', row.names=FALSE)
-pbP<-progress::progress_bar$new(total=(term_limit-1))
-
-cnames<-c()
-
-for(i in term_lower_bound:term_limit){
-  pbP$tick()
-  a_name<-paste0('a',i)
-  m_name<-paste0('m',i)
-  M_name<-paste0('M',i)
-  cnames<-c(cnames,m_name,M_name)
-#build pdf
-  m<-pdfMetalog(myList$A[`a_name`][,1],y[1],term_limit,bounds=bounds,boundedness=boundedness)
-
-  for(j in 2:length(y)){
-    temp<-pdfMetalog(myList$A[`a_name`][,1],y[j],term_limit,bounds=bounds,boundedness=boundedness)
-    m<-c(m,temp)
-  }
-
-#build quantile values
-  M<-quantileMetalog(myList$A[`a_name`][,1],y[1],term_limit,bounds=bounds,boundedness=boundedness)
-
-  for(j in 2:length(y)){
-    temp<-quantileMetalog(myList$A[`a_name`][,1],y[j],term_limit,bounds=bounds,boundedness=boundedness)
-    M<-c(M,temp)
-  }
-
-
-#add traling and leading zero's for pdf bounds
-  if(boundedness=='sl'){
-    m<-c(0,m)
-    M<-c(bounds[1],M)
-  }
-  if(boundedness=='su'){
-    m<-c(m,0)
-    M<-c(M,bounds[2])
-  }
-  if(boundedness=='b'){
-    m<-c(0,m,0)
-    M<-c(bounds[1],M,bounds[2])
-  }
-
-  if(length(Mh)!=0){
-    Mh<-cbind(Mh,m)
-    Mh<-cbind(Mh,M)
-  }
-  if(length(Mh)==0){
-    Mh<-as.data.frame(m)
-    Mh<-cbind(Mh,M)
-  }
-
-
-}#close for loop and name the columns
-colnames(Mh)<-cnames
-
-#adding the y values for the bounded models
-if(boundedness=='sl'){
-  y<-c(0,y)
-}
-if(boundedness=='su'){
-  y<-c(y,1)
-}
-if(boundedness=='b'){
-  y<-c(0,y,1)
-}
-
-
-Mh$y<-y
-
-#return values
-myList$M<-Mh
-
 #build plots
-InitalResults<-data.frame(term=(rep(paste0(term_lower_bound,' Terms'),length(Mh[,1]))),
-                          pdfValues=Mh[,1],
-                          quantileValues=Mh[,2],
-                          cumValue=Mh$y)
-if(ncol(Mh)>3){
-  for(i in 2:(length(Mh[1,]-1)/2)){
-    TempResults<-data.frame(term=(rep(paste0((term_lower_bound+(i-1)),' Terms'),length(Mh[,1]))),
-                                      pdfValues=Mh[,(i*2-1)],
-                                      quantileValues=Mh[,(i*2)],
-                                      cumValue=Mh$y)
+InitalResults<-data.frame(term=(rep(paste0(term_lower_bound,' Terms'),length(myList$M[,1]))),
+                          pdfValues=myList$M[,1],
+                          quantileValues=myList$M[,2],
+                          cumValue=myList$M$y)
+if(ncol(myList$M)>3){
+  for(i in 2:(length(myList$M[1,]-1)/2)){
+    TempResults<-data.frame(term=(rep(paste0((term_lower_bound+(i-1)),' Terms'),length(myList$M[,1]))),
+                                      pdfValues=myList$M[,(i*2-1)],
+                                      quantileValues=myList$M[,(i*2)],
+                                      cumValue=myList$M$y)
 
     InitalResults<-rbind(InitalResults,TempResults)
   }
@@ -317,19 +252,6 @@ q <- q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
 q
 
 myList$GridPlotCDF <- q
-#########pdf validation################
-y<-c()
-t<-c()
-for(i in term_lower_bound:term_limit){
-  m<-paste0('m',i)
-  x<-pdfMetalogValidation(myList$M[`m`])
-  t<-c(t,i)
-  y<-c(y,x)
-
-}
-val<-data.frame(term=t,valid=y)
-myList$Validation<-val
-
 
 return(myList)
 }
