@@ -23,18 +23,11 @@ This repository is a complement and extension of the information found in the [p
 
 ### Using the package
 
-To install the package from this repository use the following:
-
-```{r eval=FALSE}
-library(devtools)
-install_github('isaacfab/RMetalog')
-
-```
-
-Once the package is loaded you start with a data set of continuous observations.  For this repository, we will load the library and use an example of fish size measurements from the Pacific Northwest.  This data set is illustrative to demonstrate the flexibility of the metalog distribution as it is bi-modal.  The data is installed with the package.
+Once the package is loaded, start by fitting a dataset of observations from a continuous distribution.  For this vignette, we will load the library and use an included example of fish (steelhead trout) weight measurements from the Pacific Northwest.  This data set is illustrative to demonstrate the flexibility of the metalog distribution as it is bi-modal.  The data is installed with the package. Steelhead trout, unlike salmon, return to fresh water multiple times in their lives. However, with a traditional distribution, it is difficult to see the difference in size of between the one salt or two salt (salt being the number of times a fish returned to the ocean).
 
 ```{r}
 library(RMetalog)
+
 data("fishSize")
 summary(fishSize)
 ```
@@ -77,7 +70,7 @@ The summary shows if there is a valid distribution for a given term and what met
 r_metalog_plot(my_metalog)
 ```  
 
-Once the distributions are built, you can create `n` samples by selecting a term.
+As the pdf plot shows with a higher number of terms, the bi-modal nature of the distribution is revealed which can then be leveraged for further analysis. Once the distributions are built, you can create `n` samples by selecting a term.
 
 ```{r message=FALSE, warning=FALSE, fig.width=6}
 s<-r_metalog_sample(my_metalog,n=1000,term=9)

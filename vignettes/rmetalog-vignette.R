@@ -1,10 +1,6 @@
-## ----eval=FALSE----------------------------------------------------------
-#  library(devtools)
-#  install_github('isaacfab/RMetalog')
-#  
-
 ## ------------------------------------------------------------------------
 library(RMetalog)
+
 data("fishSize")
 summary(fishSize)
 
