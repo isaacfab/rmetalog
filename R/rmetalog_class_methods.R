@@ -168,7 +168,7 @@ rmetalog_quantile.rmetalog <- function(myList,y,term=3){
 #'
 #' @param x metalog object created from \code{r_metalog()}
 #'
-#' @return A summary of the object and what it contains
+#' @return A summary of the object
 #'
 #' @export
 #'

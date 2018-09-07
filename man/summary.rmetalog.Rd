@@ -10,7 +10,7 @@
 \item{x}{metalog object created from \code{r_metalog()}}
 }
 \value{
-A summary of the object and what it contains
+A summary of the object
 }
 \description{
 Summary of the metalog object

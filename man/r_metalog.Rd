@@ -10,14 +10,14 @@ r_metalog(x, bounds = c(0, 1), boundedness = "u", term_limit = 13,
 \arguments{
 \item{x}{vector of numeric data}
 
-\item{bounds}{numeric vector specifying lower/upper bounds, if any}
+\item{bounds}{numeric vector specifying lower or upper bounds, none required if the distribution is unbounded}
 
 \item{boundedness}{character string specifying unbounded, semi-bounded upper,
 semi-bounded lower or bounded; accepts values \code{u}, \code{su},
 \code{sl} and \code{b} (default: 'u')}
 
-\item{term_limit}{integer between 3 and 30, specifying number of metalog distributions, with respective terms,
-terms to build (default: 13)}
+\item{term_limit}{integer between 3 and 30, specifying the number of metalog distributions to generate.
+Larger term distributions have more flexibility (default: 13)}
 
 \item{term_lower_bound}{(Optional) the smallest term to generate, used to minimze
 computation must be less than term_limit (default is 2)}
