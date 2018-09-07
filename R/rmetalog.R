@@ -135,8 +135,8 @@ if(term_lower_bound>term_limit){
 if(term_lower_bound<2){
   stop('Error: term_lower_bound must have a value of 2 or greater')
 }
-if(step_len<=0|step_len>0.1){
-  stop('Error: step_len must be greater than 0 and less than 0.01')
+if(step_len<0.001|step_len>0.01){
+  stop('Error: step_len must be greater than 0.001 and less than 0.01')
 }
 
 #create a list to hold all the objects
