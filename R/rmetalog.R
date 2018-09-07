@@ -3,9 +3,9 @@
 #' Fit the Metalog distribution to data
 #'
 #' @param x vector of numeric data
-#' @param term_limit integer between 3 and 30, specifying number of metalog distributions, with respective terms,
-#'   terms to build (default: 13)
-#' @param bounds numeric vector specifying lower/upper bounds, if any
+#' @param term_limit integer between 3 and 30, specifying the number of metalog distributions to generate.
+#'   Larger term distributions have more flexibility (default: 13)
+#' @param bounds numeric vector specifying lower or upper bounds, none required if the distribution is unbounded
 #' @param boundedness character string specifying unbounded, semi-bounded upper,
 #'   semi-bounded lower or bounded; accepts values \code{u}, \code{su},
 #'   \code{sl} and \code{b} (default: 'u')

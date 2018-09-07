@@ -7,7 +7,7 @@
 \method{plot}{rmetalog}(myList)
 }
 \arguments{
-\item{x}{metalog object created from \code{r_metalog()}}
+\item{x}{metalog object created using \code{r_metalog()}}
 }
 \value{
 A summary plot of the CDF and PDF for each term
