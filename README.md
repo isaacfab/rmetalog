@@ -60,7 +60,7 @@ Here is an example of a lower bounded distribution build.
 ``` r
 my_metalog <- r_metalog(fishSize$FishSize,
                        term_limit = 9,
-                       term_lower_bound = 9,
+                       term_lower_bound = 2,
                        bounds=c(0,60),
                        boundedness = 'b',
                        step_len = .01)
@@ -69,14 +69,14 @@ my_metalog <- r_metalog(fishSize$FishSize,
 The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
 
 ``` r
-summary(my_metalog)
+r_metalog_summary(my_metalog)
 #>  -----------------------------------------------
 #>  Summary of Metalog Distribution Object
 #>  -----------------------------------------------
 #>  
 #> Parameters
 #>  Term Limit:  9 
-#>  Term Lower Bound:  9 
+#>  Term Lower Bound:  2 
 #>  Boundedness:  b 
 #>  Bounds (only used based on boundedness):  0 60 
 #>  Step Length for Distribution Summary:  0.01 
@@ -84,13 +84,20 @@ summary(my_metalog)
 #> 
 #>  Validation and Fit Method
 #>  term valid method
+#>     2   yes    OLS
+#>     3   yes    OLS
+#>     4   yes    OLS
+#>     5   yes    OLS
+#>     6   yes    OLS
+#>     7   yes    OLS
+#>     8   yes    OLS
 #>     9   yes    OLS
 ```
 
 You can also plot a quick visaul comparison of the distributions by term.
 
 ``` r
-plot(my_metalog)
+r_metalog_plot(my_metalog)
 ```
 
 ![](README-unnamed-chunk-7-1.png)
@@ -102,7 +109,7 @@ plot(my_metalog)
 Once the distributions are built, you can create `n` samples by selecting a term.
 
 ``` r
-s<-rmetalog_sample(my_metalog,n=1000,term=9)
+s<-r_metalog_sample(my_metalog,n=1000,term=9)
 hist(s)
 ```
 
@@ -111,7 +118,7 @@ hist(s)
 You can also retrieve quantile values with a probability in a similar way.
 
 ``` r
-rmetalog_quantile(my_metalog,y=c(0.25,0.5,0.75),term=9)
+r_metalog_quantile(my_metalog,y=c(0.25,0.5,0.75),term=9)
 #>             a9
 #> [1,]  7.240623
 #> [2,]  9.840139
