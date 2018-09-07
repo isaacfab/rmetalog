@@ -1,22 +1,17 @@
 ---
-title: "README"
+title: "Metalog Distributions in R"
 author: "Isaac J. Faber"
-output: github_document
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
-
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
-```{r, echo = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  fig.path = "README-"
-)
-```
 
 ### The R Metalog Distribution
 
-This repo is a working project for an R package that generates functions for the metalog distribution.  The metalog distribution is a highly flexible probability distribution that can be used to model data without traditional parameters.
+This package generates functions for the metalog distribution.  The metalog distribution is a highly flexible probability distribution that can be used to model data without traditional parameters.
 
 ### Metalog Background
 
@@ -65,38 +60,38 @@ Here is an example of a lower bounded distribution build.
 ```{r}
 my_metalog <- r_metalog(fishSize$FishSize,
                        term_limit = 9,
-                       term_lower_bound = 2,
-                       bounds=c(0,60),
-                       boundedness = 'b',
+                       bounds=0,
+                       boundedness = 'sl',
                        step_len = .01)
 ```
 
 The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
 
 ```{r}
-summary(my_metalog)
+r_metalog_summary(my_metalog)
 ```
   
-You can also plot a quick visaul comparison of the distributions by term. 
+The summary shows if there is a valid distribution for a given term and what method was used to fit the data. There are currently only two methods traditional least squares (OLS) and a more robust constrained linear program. The package attempts to use OLS and if it returns an invalid distribution (described in the literature referenced above) tries the linear program. You can also plot a quick visual comparison of the distributions by term. 
 
-```{r message=FALSE, warning=FALSE}
-plot(my_metalog)
+```{r message=FALSE, warning=FALSE, fig.width=6}
+r_metalog_plot(my_metalog)
 ```  
 
 Once the distributions are built, you can create `n` samples by selecting a term.
 
-```{r message=FALSE, warning=FALSE}
-s<-rmetalog_sample(my_metalog,n=1000,term=9)
+```{r message=FALSE, warning=FALSE, fig.width=6}
+s<-r_metalog_sample(my_metalog,n=1000,term=9)
 hist(s)
 ```  
 
 You can also retrieve quantile values with a probability in a similar way.
 
 ```{r message=FALSE, warning=FALSE}
-rmetalog_quantile(my_metalog,y=c(0.25,0.5,0.75),term=9)
+r_metalog_quantile(my_metalog,y=c(0.25,0.5,0.75),term=9)
 ```  
 
-As this package is under development, any feedback is appreciated! Please submit a pull request or issue if you find anything that needs to be addressed.
+Any feedback is appreciated! Please submit a pull request or issue to the [development repo](https://github.com/isaacfab/RMetalog) if you find anything that needs to be addressed.
+
 
 
 

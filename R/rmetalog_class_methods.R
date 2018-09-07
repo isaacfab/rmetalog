@@ -1,6 +1,6 @@
 #' Create random samples from an rmetalog distribution object
 #'
-#' @param x metalog object created from \code{r_metalog()}
+#' @param my_metalog metalog object created from \code{r_metalog()}
 #' @param n number of observations (default is 1)
 #' @param term which metalog distribution to sample from
 #'
@@ -16,23 +16,24 @@
 #' myMetalog <- r_metalog(fishSize$FishSize,
 #'                       bounds=c(0, 60),
 #'                       boundedness = 'b',
-#'                       term_limit = 13)
+#'                       term_limit = 9,
+#'                       term_lower_bound = 9)
 #'
-#' s<-rmetalog_sample(myMetalog,1000,9)
+#' s <- r_metalog_sample(myMetalog, n=1000, term = 9)
 #' hist(s)
-rmetalog_sample <- function(x,n=1,term=3) {
-  UseMethod("rmetalog_sample",x)
+r_metalog_sample <- function(my_metalog,n=1,term=3) {
+  UseMethod("r_metalog_sample",my_metalog)
 }
 
 #' @export
-rmetalog_sample.default <- function(x,n=1,term=3){
+r_metalog_sample.default <- function(my_metalog,n=1,term=3){
   print('Object must be of calss rmetalog')
 }
 
 #' @export
-rmetalog_sample.rmetalog <- function(myList,n=1,term=3){
+r_metalog_sample.rmetalog <- function(my_metalog,n=1,term=3){
   ###################some error checking######################
-  valid_terms<-myList$Validation$term
+  valid_terms<-my_metalog$Validation$term
   if(class(n)!='numeric'|n<1|n%%1!=0){
     stop('Error: n must be a positive numeric interger')
   }
@@ -66,15 +67,15 @@ rmetalog_sample.rmetalog <- function(myList,n=1,term=3){
   }
  Y<-as.matrix(Y)
  amat<-paste0('a',term)
- a<-as.matrix(myList$A[`amat`])
+ a<-as.matrix(my_metalog$A[`amat`])
  s<-Y %*% a
- if(myList$params$boundedness=='sl'){
+ if(my_metalog$params$boundedness=='sl'){
       s<-my_metalog$params$bounds[1] + exp(s)
  }
- if(myList$params$boundedness=='su'){
+ if(my_metalog$params$boundedness=='su'){
       s<-my_metalog$params$bounds[2] - exp(-(s))
  }
- if(myList$params$boundedness=='b'){
+ if(my_metalog$params$boundedness=='b'){
      s <- (my_metalog$params$bounds[1]+(my_metalog$params$bounds[2])*exp(s))/(1+exp(s))
  }
 
@@ -83,7 +84,7 @@ rmetalog_sample.rmetalog <- function(myList,n=1,term=3){
 
 #' Generate quantiles from a probability from a metalog object
 #'
-#' @param x metalog object created from \code{r_metalog()}
+#' @param my_metalog metalog object created from \code{r_metalog()}
 #' @param y  y vector of probabilities
 #' @param term which metalog distribution to sample from
 #'
@@ -99,22 +100,23 @@ rmetalog_sample.rmetalog <- function(myList,n=1,term=3){
 #' myMetalog <- r_metalog(fishSize$FishSize,
 #'                       bounds=c(0, 60),
 #'                       boundedness = 'b',
-#'                       term_limit = 13)
+#'                       term_limit = 9,
+#'                       term_lower_bound = 9)
 #'
-#' s<-rmetalog_quantile(myMetalog)
-rmetalog_quantile <- function(x,y,term=3) {
-  UseMethod("rmetalog_quantile",x)
+#' s<-r_metalog_quantile(myMetalog,y=c(0.25,0.5,0.7),term = 9)
+r_metalog_quantile <- function(my_metalog,y,term=3) {
+  UseMethod("r_metalog_quantile",my_metalog)
 }
 
 #' @export
-rmetalog_quantile.default <- function(x,y,term=3){
-  print('Object must be of calss rmetalog')
+r_metalog_quantile.default <- function(my_metalog,y,term=3){
+  print('Object must be of class rmetalog')
 }
 
 #' @export
-rmetalog_quantile.rmetalog <- function(myList,y,term=3){
+r_metalog_quantile.rmetalog <- function(my_metalog,y,term=3){
   ###################some error checking######################
-  valid_terms<-myList$Validation$term
+  valid_terms<-my_metalog$Validation$term
   if(class(y)!='numeric'|max(y)>=1|min(y)<=0){
     stop('Error: y must be a positive numeric vector between 0 and 1')
   }
@@ -148,15 +150,15 @@ rmetalog_quantile.rmetalog <- function(myList,y,term=3){
   }
   Y<-as.matrix(Y)
   amat<-paste0('a',term)
-  a<-as.matrix(myList$A[`amat`])
+  a<-as.matrix(my_metalog$A[`amat`])
   s<-Y %*% a
-  if(myList$params$boundedness=='sl'){
+  if(my_metalog$params$boundedness=='sl'){
     s<-my_metalog$params$bounds[1] + exp(s)
   }
-  if(myList$params$boundedness=='su'){
+  if(my_metalog$params$boundedness=='su'){
     s<-my_metalog$params$bounds[2] - exp(-(s))
   }
-  if(myList$params$boundedness=='b'){
+  if(my_metalog$params$boundedness=='b'){
     s <- (my_metalog$params$bounds[1]+(my_metalog$params$bounds[2])*exp(s))/(1+exp(s))
   }
 
@@ -166,7 +168,7 @@ rmetalog_quantile.rmetalog <- function(myList,y,term=3){
 
 #' Summary of the metalog object
 #'
-#' @param x metalog object created from \code{r_metalog()}
+#' @param my_metalog metalog object created from \code{r_metalog()}
 #'
 #' @return A summary of the object
 #'
@@ -182,26 +184,36 @@ rmetalog_quantile.rmetalog <- function(myList,y,term=3){
 #'                       boundedness = 'b',
 #'                       term_limit = 13)
 #'
-#' summary(myMetalog)
-summary.rmetalog <- function(x){
+#' r_metalog_summary(myMetalog)
+r_metalog_summary <- function(my_metalog) {
+  UseMethod("r_metalog_summary",my_metalog)
+}
+
+#' @export
+r_metalog_summary.default <- function(my_metalog){
+  print('Object must be of class rmetalog')
+}
+
+#' @export
+r_metalog_summary.rmetalog <- function(my_metalog){
   cat(' -----------------------------------------------\n',
       'Summary of Metalog Distribution Object\n',
       '-----------------------------------------------\n',
       '\nParameters\n',
-      'Term Limit: ',x$params$term_limit, '\n',
-      'Term Lower Bound: ',x$params$term_lower_bound, '\n',
-      'Boundedness: ',x$params$boundedness, '\n',
-      'Bounds (only used based on boundedness): ',x$params$bounds, '\n',
-      'Step Length for Distribution Summary: ',x$params$step_len, '\n',
+      'Term Limit: ',my_metalog$params$term_limit, '\n',
+      'Term Lower Bound: ',my_metalog$params$term_lower_bound, '\n',
+      'Boundedness: ',my_metalog$params$boundedness, '\n',
+      'Bounds (only used based on boundedness): ',my_metalog$params$bounds, '\n',
+      'Step Length for Distribution Summary: ',my_metalog$params$step_len, '\n',
       '\n\n Validation and Fit Method\n'
   )
-  print(x$Validation,row.names=FALSE)
+  print(my_metalog$Validation,row.names=FALSE)
 
 }
 
 #' Plot of the metalog object
 #'
-#' @param x metalog object created using \code{r_metalog()}
+#' @param my_metalog metalog object created using \code{r_metalog()}
 #'
 #' @return A summary plot of the CDF and PDF for each term
 #'
@@ -217,19 +229,29 @@ summary.rmetalog <- function(x){
 #'                       boundedness = 'b',
 #'                       term_limit = 13)
 #'
-#' plot(myMetalog)
-plot.rmetalog <- function(myList){
+#' r_metalog_plot(myMetalog)
+r_metalog_plot <- function(my_metalog) {
+  UseMethod("r_metalog_plot",my_metalog)
+}
+
+#' @export
+r_metalog_plot.default <- function(my_metalog){
+  print('Object must be of class rmetalog')
+}
+
+#' @export
+r_metalog_plot.rmetalog <- function(my_metalog){
   #build plots
-  InitalResults<-data.frame(term=(rep(paste0(myList$params$term_lower_bound,' Terms'),length(myList$M[,1]))),
-                            pdfValues=myList$M[,1],
-                            quantileValues=myList$M[,2],
-                            cumValue=myList$M$y)
-  if(ncol(myList$M)>3){
-    for(i in 2:(length(myList$M[1,]-1)/2)){
-      TempResults<-data.frame(term=(rep(paste0((myList$params$term_lower_bound+(i-1)),' Terms'),length(myList$M[,1]))),
-                              pdfValues=myList$M[,(i*2-1)],
-                              quantileValues=myList$M[,(i*2)],
-                              cumValue=myList$M$y)
+  InitalResults<-data.frame(term=(rep(paste0(my_metalog$params$term_lower_bound,' Terms'),length(my_metalog$M[,1]))),
+                            pdfValues=my_metalog$M[,1],
+                            quantileValues=my_metalog$M[,2],
+                            cumValue=my_metalog$M$y)
+  if(ncol(my_metalog$M)>3){
+    for(i in 2:(length(my_metalog$M[1,]-1)/2)){
+      TempResults<-data.frame(term=(rep(paste0((my_metalog$params$term_lower_bound+(i-1)),' Terms'),length(my_metalog$M[,1]))),
+                              pdfValues=my_metalog$M[,(i*2-1)],
+                              quantileValues=my_metalog$M[,(i*2)],
+                              cumValue=my_metalog$M$y)
 
       InitalResults<-rbind(InitalResults,TempResults)
     }
