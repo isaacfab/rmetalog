@@ -1,7 +1,7 @@
 Package: RMetalog
 Type: Package
 Title: R Implementation of the Metalog Distribution
-Version: 0.1.0
+Version: 1.0.0
 Author: Isaac Faber
 Maintainer: Isaac Faber <isaacfab@gmail.com>
 Description: Implementation of the metalog distribution in R.

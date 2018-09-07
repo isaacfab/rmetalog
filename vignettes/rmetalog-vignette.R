@@ -19,15 +19,15 @@ my_metalog <- r_metalog(fishSize$FishSize,
                        step_len = .01)
 
 ## ------------------------------------------------------------------------
-summary(my_metalog)
+r_metalog_summary(my_metalog)
 
 ## ----message=FALSE, warning=FALSE, fig.width=6---------------------------
-plot(my_metalog)
+r_metalog_plot(my_metalog)
 
 ## ----message=FALSE, warning=FALSE, fig.width=6---------------------------
-s<-rmetalog_sample(my_metalog,n=1000,term=9)
+s<-r_metalog_sample(my_metalog,n=1000,term=9)
 hist(s)
 
 ## ----message=FALSE, warning=FALSE----------------------------------------
-rmetalog_quantile(my_metalog,y=c(0.25,0.5,0.75),term=9)
+r_metalog_quantile(my_metalog,y=c(0.25,0.5,0.75),term=9)
 
