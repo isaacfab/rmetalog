@@ -14,10 +14,10 @@
 #'
 #' # Create a bounded metalog object
 #' myMetalog <- r_metalog(fishSize$FishSize,
-#'                       bounds=c(0, 60),
-#'                       boundedness = 'b',
-#'                       term_limit = 9,
-#'                       term_lower_bound = 9)
+#'                        bounds=c(0, 60),
+#'                        boundedness = 'b',
+#'                        term_limit = 9,
+#'                        term_lower_bound = 9)
 #'
 #' s <- r_metalog_sample(myMetalog, n=1000, term = 9)
 #' hist(s)
@@ -33,51 +33,64 @@ r_metalog_sample.default <- function(my_metalog,n=1,term=3){
 #' @export
 r_metalog_sample.rmetalog <- function(my_metalog,n=1,term=3){
   ###################some error checking######################
-  valid_terms<-my_metalog$Validation$term
-  if(class(n)!='numeric'|n<1|n%%1!=0){
+  valid_terms <- my_metalog$Validation$term
+  if (class(n) != 'numeric' | n < 1 | n %% 1 != 0) {
     stop('Error: n must be a positive numeric interger')
   }
-  if(class(term)!='numeric'|term<2|term%%1!=0|!(term %in% valid_terms)|length(term)>1){
-    stop(paste0('Error: term must be a single positive numeric interger contained in the metalog object. Available terms are: ',
-                valid_terms))
+  if (class(term) != 'numeric' |
+      term < 2 | term %% 1 != 0 | !(term %in% valid_terms) |
+      length(term) > 1) {
+    stop(
+      paste(
+        'Error: term must be a single positive numeric interger",
+        "contained in the metalog object. Available terms are:',
+        valid_terms
+      )
+    )
   }
-  x<-runif(n)
-  Y<-data.frame(y1=rep(1,n))
+  x <- stats::runif(n)
+  Y <- data.frame(y1 = rep(1, n))
+
   ################construct the Y Matrix initial values################
+  Y$y2 <- (log(x / (1 - x)))
+  Y$y3 <- (x - 0.5) * Y$y2
 
-  Y$y2<-(log(x/(1-x)))
-  Y$y3<-(x-0.5)*Y$y2
-
-  if(term>3){
-    Y$y4<-x-0.5
+  if (term > 3) {
+    Y$y4 <- x - 0.5
   }
-  #####complete the values through the term limit#####
-  if(term>4){
-    for (i in 5:(term)){
 
-      y<-paste0('y',i)
-      if(i %% 2 != 0){
-        Y[`y`]<-Y$y4^(i%/%2)
+  #####complete the values through the term limit#####
+  if (term > 4) {
+    for (i in 5:(term)) {
+      y <- paste0('y', i)
+      if (i %% 2 != 0) {
+        Y[`y`] <- Y$y4 ^ (i %/% 2)
       }
-      if(i %% 2 == 0){
-        z<-paste0('y',(i-1))
-        Y[`y`]<-Y$y2*Y[`z`]
+      if (i %% 2 == 0) {
+        z <- paste0('y', (i - 1))
+        Y[`y`] <- Y$y2 * Y[`z`]
       }
     }
   }
- Y<-as.matrix(Y)
- amat<-paste0('a',term)
- a<-as.matrix(my_metalog$A[`amat`])
- s<-Y %*% a
- if(my_metalog$params$boundedness=='sl'){
-      s<-my_metalog$params$bounds[1] + exp(s)
- }
- if(my_metalog$params$boundedness=='su'){
-      s<-my_metalog$params$bounds[2] - exp(-(s))
- }
- if(my_metalog$params$boundedness=='b'){
-     s <- (my_metalog$params$bounds[1]+(my_metalog$params$bounds[2])*exp(s))/(1+exp(s))
- }
+
+  Y <- as.matrix(Y)
+  amat <- paste0('a', term)
+  a <- as.matrix(my_metalog$A[`amat`])
+  s <- Y %*% a
+
+  if (my_metalog$params$boundedness == 'sl') {
+    s <- my_metalog$params$bounds[1] + exp(s)
+  }
+
+  if (my_metalog$params$boundedness == 'su') {
+    s <- my_metalog$params$bounds[2] - exp(-(s))
+  }
+
+  if (my_metalog$params$boundedness == 'b') {
+    s <-
+      (my_metalog$params$bounds[1] + (my_metalog$params$bounds[2]) * exp(s)) /
+      (1 + exp(s))
+  }
 
  return(s)
 }
@@ -220,7 +233,7 @@ summary.rmetalog <- function(object, ...) {
 #'                        boundedness = 'b',
 #'                        term_limit = 13)
 #'
-#' r_metalog_plot(myMetalog)
+#' plot(myMetalog)
 plot.rmetalog <- function(x, ...){
   #build plots
   InitalResults <-

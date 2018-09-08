@@ -27,5 +27,5 @@ myMetalog <- r_metalog(fishSize$FishSize,
                        boundedness = 'b',
                        term_limit = 13)
 
-r_metalog_plot(myMetalog)
+plot(myMetalog)
 }
