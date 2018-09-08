@@ -1,4 +1,12 @@
 # base r_metalog function here!
+if(getRversion() >= "2.15.1")
+  utils::globalVariables(
+    c(
+      "cumValue",
+      "pdfValues",
+      "quantileValues"
+    )
+  )
 
 #' Fit the Metalog distribution to data
 #'

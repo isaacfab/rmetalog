@@ -25,10 +25,10 @@ data("fishSize")
 
 # Create a bounded metalog object
 myMetalog <- r_metalog(fishSize$FishSize,
-                      bounds=c(0, 60),
-                      boundedness = 'b',
-                      term_limit = 9,
-                      term_lower_bound = 9)
+                       bounds=c(0, 60),
+                       boundedness = 'b',
+                       term_limit = 9,
+                       term_lower_bound = 9)
 
 s <- r_metalog_sample(myMetalog, n=1000, term = 9)
 hist(s)

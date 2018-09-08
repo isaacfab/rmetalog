@@ -27,7 +27,7 @@ MLprobs <- function(x,step_len) {
     y<-seq(step_len,(1-step_len),step_len)
     tailstep<-(step_len/10)
     y<-c(seq(tailstep,(min(y)-tailstep),tailstep),y,seq((max(y)+tailstep),(max(y)+tailstep*9),tailstep))
-    x_new<-quantile(x[,1],probs = y)
+    x_new<-stats::quantile(x[,1],probs = y)
     x<-as.data.frame(x_new)
     x$probs<-y
   }

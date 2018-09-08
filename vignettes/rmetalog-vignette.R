@@ -9,16 +9,16 @@ summary(fishSize)
 
 ## ------------------------------------------------------------------------
 my_metalog <- r_metalog(fishSize$FishSize,
-                       term_limit = 9,
-                       bounds=0,
-                       boundedness = 'sl',
-                       step_len = .01)
+                        term_limit = 9,
+                        bounds=0,
+                        boundedness = 'sl',
+                        step_len = .01)
 
 ## ------------------------------------------------------------------------
-r_metalog_summary(my_metalog)
+summary(my_metalog)
 
 ## ----message=FALSE, warning=FALSE, fig.width=6---------------------------
-r_metalog_plot(my_metalog)
+plot(my_metalog)
 
 ## ----message=FALSE, warning=FALSE, fig.width=6---------------------------
 s<-r_metalog_sample(my_metalog,n=1000,term=9)

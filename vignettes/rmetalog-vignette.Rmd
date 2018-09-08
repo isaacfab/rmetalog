@@ -52,22 +52,22 @@ Here is an example of a lower bounded distribution build.
 
 ```{r}
 my_metalog <- r_metalog(fishSize$FishSize,
-                       term_limit = 9,
-                       bounds=0,
-                       boundedness = 'sl',
-                       step_len = .01)
+                        term_limit = 9,
+                        bounds=0,
+                        boundedness = 'sl',
+                        step_len = .01)
 ```
 
 The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
 
 ```{r}
-r_metalog_summary(my_metalog)
+summary(my_metalog)
 ```
   
 The summary shows if there is a valid distribution for a given term and what method was used to fit the data. There are currently only two methods traditional least squares (OLS) and a more robust constrained linear program. The package attempts to use OLS and if it returns an invalid distribution (described in the literature referenced above) tries the linear program. You can also plot a quick visual comparison of the distributions by term. 
 
 ```{r message=FALSE, warning=FALSE, fig.width=6}
-r_metalog_plot(my_metalog)
+plot(my_metalog)
 ```  
 
 As the pdf plot shows with a higher number of terms, the bi-modal nature of the distribution is revealed which can then be leveraged for further analysis. Once the distributions are built, you can create `n` samples by selecting a term.
