@@ -23,7 +23,7 @@ if(getRversion() >= "2.15.1")
 #'  length is greater than 100. Use this if a specific fine grid fit is required. (default is 0.01)
 #' @param probs (Optional) probability quantiles, same length as \code{x}
 #'
-#' @return A metalog object with elements
+#' @return A \code{metalog} object with elements
 #' \item{params}{A list of the parameters used to create the metalog object}
 #' \item{dataValues}{a dataframe with the first column the raw data, second column the cummulative probabilites and the third the z vector}
 #' \item{Y}{The Y matrix values for each quantile and term}
@@ -40,17 +40,17 @@ if(getRversion() >= "2.15.1")
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
-#' myMetalog <- r_metalog(fishSize$FishSize,
-#'                       bounds=c(0, 60),
-#'                       boundedness = 'b',
-#'                       term_limit = 13)
-r_metalog <- function(x,
-                      bounds = c(0,1),
-                      boundedness = 'u',
-                      term_limit = 13,
-                      term_lower_bound = 2,
-                      step_len = 0.01,
-                      probs = NA) {
+#' myMetalog <- metalog(fishSize$FishSize,
+#'                      bounds=c(0, 60),
+#'                      boundedness = 'b',
+#'                      term_limit = 13)
+metalog <- function(x,
+                    bounds = c(0,1),
+                    boundedness = 'u',
+                    term_limit = 13,
+                    term_lower_bound = 2,
+                    step_len = 0.01,
+                    probs = NA) {
 
 
 ################# inital error checking ################
@@ -62,7 +62,7 @@ if(class(bounds)!='numeric'){
   stop('Error: bounds must be a numeric vector!')
 }
 
-if(term_limit%%1!=0){
+if(term_limit%%1!=0) {
   stop('Error: term_limit parameter should be an integer between 3 and 30')
 }
 
@@ -214,9 +214,7 @@ myList<-a_vector_OLS_and_LP(myList,
                             diff_error=.001,
                             diff_step=0.001)
 
-class(myList) <- append("rmetalog", class(myList))
+class(myList) <- append("metalog", class(myList))
 
 return(myList)
 }
-
-

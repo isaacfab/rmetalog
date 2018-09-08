@@ -1,7 +1,7 @@
 #Supporting functions called inside the metalog function call
 
 #build the quantiles through a base function
-MLprobs <- function(x,step_len) {
+MLprobs <- function(x, step_len) {
   if(class(x)!='numeric'){
     return(print('Error: input must be a numeric vector!'))
   }

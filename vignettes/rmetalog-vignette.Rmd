@@ -35,7 +35,7 @@ summary(fishSize)
 The base function for the package to create distributions is:
 
 ```{r eval=FALSE}
-r_metalog()
+metalog()
 ```
 
 This function takes several inputs:
@@ -51,11 +51,11 @@ This function takes several inputs:
 Here is an example of a lower bounded distribution build.
 
 ```{r}
-my_metalog <- r_metalog(fishSize$FishSize,
-                        term_limit = 9,
-                        bounds=0,
-                        boundedness = 'sl',
-                        step_len = .01)
+my_metalog <- metalog(fishSize$FishSize,
+                      term_limit = 9,
+                      bounds=0,
+                      boundedness = 'sl',
+                      step_len = .01)
 ```
 
 The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
@@ -73,18 +73,14 @@ plot(my_metalog)
 As the pdf plot shows with a higher number of terms, the bi-modal nature of the distribution is revealed which can then be leveraged for further analysis. Once the distributions are built, you can create `n` samples by selecting a term.
 
 ```{r message=FALSE, warning=FALSE, fig.width=6}
-s<-r_metalog_sample(my_metalog,n=1000,term=9)
+s <- rmetalog(my_metalog, n = 1000, term = 9)
 hist(s)
 ```  
 
 You can also retrieve quantile values with a probability in a similar way.
 
 ```{r message=FALSE, warning=FALSE}
-r_metalog_quantile(my_metalog,y=c(0.25,0.5,0.75),term=9)
+qmetalog(my_metalog, y = c(0.25, 0.5, 0.75), term = 9)
 ```  
 
 Any feedback is appreciated! Please submit a pull request or issue to the [development repo](https://github.com/isaacfab/RMetalog) if you find anything that needs to be addressed.
-
-
-
-

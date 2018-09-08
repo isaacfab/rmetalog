@@ -1,6 +1,6 @@
-#' Create random samples from an rmetalog distribution object
+#' Create random samples from an metalog distribution object
 #'
-#' @param my_metalog metalog object created from \code{r_metalog()}
+#' @param m metalog object created from \code{metalog()}
 #' @param n number of observations (default is 1)
 #' @param term which metalog distribution to sample from
 #'
@@ -13,27 +13,27 @@
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
-#' myMetalog <- r_metalog(fishSize$FishSize,
-#'                        bounds=c(0, 60),
-#'                        boundedness = 'b',
-#'                        term_limit = 9,
-#'                        term_lower_bound = 9)
+#' myMetalog <- metalog(fishSize$FishSize,
+#'                      bounds=c(0, 60),
+#'                      boundedness = 'b',
+#'                      term_limit = 9,
+#'                      term_lower_bound = 9)
 #'
-#' s <- r_metalog_sample(myMetalog, n=1000, term = 9)
+#' s <- rmetalog(myMetalog, n=1000, term = 9)
 #' hist(s)
-r_metalog_sample <- function(my_metalog,n=1,term=3) {
-  UseMethod("r_metalog_sample",my_metalog)
+rmetalog <- function(m, n = 1, term = 3) {
+  UseMethod("rmetalog", m)
 }
 
 #' @export
-r_metalog_sample.default <- function(my_metalog,n=1,term=3){
-  print('Object must be of calss rmetalog')
+rmetalog.default <- function(m, n = 1, term = 3) {
+  print('Object must be of calss metalog')
 }
 
 #' @export
-r_metalog_sample.rmetalog <- function(my_metalog,n=1,term=3){
+rmetalog.metalog <- function(m, n = 1, term = 3){
   ###################some error checking######################
-  valid_terms <- my_metalog$Validation$term
+  valid_terms <- m$Validation$term
   if (class(n) != 'numeric' | n < 1 | n %% 1 != 0) {
     stop('Error: n must be a positive numeric interger')
   }
@@ -75,20 +75,20 @@ r_metalog_sample.rmetalog <- function(my_metalog,n=1,term=3){
 
   Y <- as.matrix(Y)
   amat <- paste0('a', term)
-  a <- as.matrix(my_metalog$A[`amat`])
+  a <- as.matrix(m$A[`amat`])
   s <- Y %*% a
 
-  if (my_metalog$params$boundedness == 'sl') {
-    s <- my_metalog$params$bounds[1] + exp(s)
+  if (m$params$boundedness == 'sl') {
+    s <- m$params$bounds[1] + exp(s)
   }
 
-  if (my_metalog$params$boundedness == 'su') {
-    s <- my_metalog$params$bounds[2] - exp(-(s))
+  if (m$params$boundedness == 'su') {
+    s <- m$params$bounds[2] - exp(-(s))
   }
 
-  if (my_metalog$params$boundedness == 'b') {
+  if (m$params$boundedness == 'b') {
     s <-
-      (my_metalog$params$bounds[1] + (my_metalog$params$bounds[2]) * exp(s)) /
+      (m$params$bounds[1] + (m$params$bounds[2]) * exp(s)) /
       (1 + exp(s))
   }
 
@@ -97,7 +97,7 @@ r_metalog_sample.rmetalog <- function(my_metalog,n=1,term=3){
 
 #' Generate quantiles from a probability from a metalog object
 #'
-#' @param my_metalog metalog object created from \code{r_metalog()}
+#' @param m metalog object created from \code{metalog()}
 #' @param y  y vector of probabilities
 #' @param term which metalog distribution to sample from
 #'
@@ -110,26 +110,26 @@ r_metalog_sample.rmetalog <- function(my_metalog,n=1,term=3){
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
-#' myMetalog <- r_metalog(fishSize$FishSize,
-#'                       bounds=c(0, 60),
-#'                       boundedness = 'b',
-#'                       term_limit = 9,
-#'                       term_lower_bound = 9)
+#' myMetalog <- metalog(fishSize$FishSize,
+#'                      bounds=c(0, 60),
+#'                      boundedness = 'b',
+#'                      term_limit = 9,
+#'                      term_lower_bound = 9)
 #'
-#' s<-r_metalog_quantile(myMetalog,y=c(0.25,0.5,0.7),term = 9)
-r_metalog_quantile <- function(my_metalog,y,term=3) {
-  UseMethod("r_metalog_quantile",my_metalog)
+#' s <- qmetalog(myMetalog,y=c(0.25,0.5,0.7),term = 9)
+qmetalog <- function(m, y, term = 3) {
+  UseMethod("qmetalog", m)
 }
 
 #' @export
-r_metalog_quantile.default <- function(my_metalog,y,term=3){
-  print('Object must be of class rmetalog')
+qmetalog.default <- function(m, y, term = 3){
+  print('Object must be of class metalog')
 }
 
 #' @export
-r_metalog_quantile.rmetalog <- function(my_metalog,y,term=3){
+qmetalog.metalog <- function(m, y, term = 3){
   ###################some error checking######################
-  valid_terms<-my_metalog$Validation$term
+  valid_terms<-m$Validation$term
   if(class(y)!='numeric'|max(y)>=1|min(y)<=0){
     stop('Error: y must be a positive numeric vector between 0 and 1')
   }
@@ -163,16 +163,16 @@ r_metalog_quantile.rmetalog <- function(my_metalog,y,term=3){
   }
   Y<-as.matrix(Y)
   amat<-paste0('a',term)
-  a<-as.matrix(my_metalog$A[`amat`])
+  a<-as.matrix(m$A[`amat`])
   s<-Y %*% a
-  if(my_metalog$params$boundedness=='sl'){
-    s<-my_metalog$params$bounds[1] + exp(s)
+  if(m$params$boundedness=='sl'){
+    s<-m$params$bounds[1] + exp(s)
   }
-  if(my_metalog$params$boundedness=='su'){
-    s<-my_metalog$params$bounds[2] - exp(-(s))
+  if(m$params$boundedness=='su'){
+    s<-m$params$bounds[2] - exp(-(s))
   }
-  if(my_metalog$params$boundedness=='b'){
-    s <- (my_metalog$params$bounds[1]+(my_metalog$params$bounds[2])*exp(s))/(1+exp(s))
+  if(m$params$boundedness=='b'){
+    s <- (m$params$bounds[1]+(m$params$bounds[2])*exp(s))/(1+exp(s))
   }
 
   return(s)
@@ -181,7 +181,7 @@ r_metalog_quantile.rmetalog <- function(my_metalog,y,term=3){
 
 #' Summary of the metalog object
 #'
-#' @param object metalog object created from \code{r_metalog()}
+#' @param object metalog object created from \code{metalog()}
 #' @param ... other stuff
 #'
 #' @return A summary of the object
@@ -193,13 +193,13 @@ r_metalog_quantile.rmetalog <- function(my_metalog,y,term=3){
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
-#' myMetalog <- r_metalog(fishSize$FishSize,
-#'                        bounds=c(0, 60),
-#'                        boundedness = 'b',
-#'                        term_limit = 13)
+#' myMetalog <- metalog(fishSize$FishSize,
+#'                      bounds=c(0, 60),
+#'                      boundedness = 'b',
+#'                      term_limit = 13)
 #'
 #' summary(myMetalog)
-summary.rmetalog <- function(object, ...) {
+summary.metalog <- function(object, ...) {
   cat(' -----------------------------------------------\n',
       'Summary of Metalog Distribution Object\n',
       '-----------------------------------------------\n',
@@ -216,7 +216,7 @@ summary.rmetalog <- function(object, ...) {
 
 #' Plot of the metalog object
 #'
-#' @param x metalog object created using \code{r_metalog()}
+#' @param x metalog object created using \code{metalog()}
 #' @param ... ignored; included for S3 generic/method consistency
 #'
 #' @return A summary plot of the CDF and PDF for each term
@@ -228,13 +228,13 @@ summary.rmetalog <- function(object, ...) {
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
-#' myMetalog <- r_metalog(fishSize$FishSize,
-#'                        bounds=c(0, 60),
-#'                        boundedness = 'b',
-#'                        term_limit = 13)
+#' myMetalog <- metalog(fishSize$FishSize,
+#'                      bounds=c(0, 60),
+#'                      boundedness = 'b',
+#'                      term_limit = 13)
 #'
 #' plot(myMetalog)
-plot.rmetalog <- function(x, ...){
+plot.metalog <- function(x, ...){
   #build plots
   InitalResults <-
     data.frame(
