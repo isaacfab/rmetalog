@@ -168,7 +168,8 @@ r_metalog_quantile.rmetalog <- function(my_metalog,y,term=3){
 
 #' Summary of the metalog object
 #'
-#' @param my_metalog metalog object created from \code{r_metalog()}
+#' @param object metalog object created from \code{r_metalog()}
+#' @param ... other stuff
 #'
 #' @return A summary of the object
 #'
@@ -180,40 +181,30 @@ r_metalog_quantile.rmetalog <- function(my_metalog,y,term=3){
 #'
 #' # Create a bounded metalog object
 #' myMetalog <- r_metalog(fishSize$FishSize,
-#'                       bounds=c(0, 60),
-#'                       boundedness = 'b',
-#'                       term_limit = 13)
+#'                        bounds=c(0, 60),
+#'                        boundedness = 'b',
+#'                        term_limit = 13)
 #'
-#' r_metalog_summary(myMetalog)
-r_metalog_summary <- function(my_metalog) {
-  UseMethod("r_metalog_summary",my_metalog)
-}
-
-#' @export
-r_metalog_summary.default <- function(my_metalog){
-  print('Object must be of class rmetalog')
-}
-
-#' @export
-r_metalog_summary.rmetalog <- function(my_metalog){
+#' summary(myMetalog)
+summary.rmetalog <- function(object, ...) {
   cat(' -----------------------------------------------\n',
       'Summary of Metalog Distribution Object\n',
       '-----------------------------------------------\n',
       '\nParameters\n',
-      'Term Limit: ',my_metalog$params$term_limit, '\n',
-      'Term Lower Bound: ',my_metalog$params$term_lower_bound, '\n',
-      'Boundedness: ',my_metalog$params$boundedness, '\n',
-      'Bounds (only used based on boundedness): ',my_metalog$params$bounds, '\n',
-      'Step Length for Distribution Summary: ',my_metalog$params$step_len, '\n',
+      'Term Limit: ', object$params$term_limit, '\n',
+      'Term Lower Bound: ', object$params$term_lower_bound, '\n',
+      'Boundedness: ', object$params$boundedness, '\n',
+      'Bounds (only used based on boundedness): ', object$params$bounds, '\n',
+      'Step Length for Distribution Summary: ', object$params$step_len, '\n',
       '\n\n Validation and Fit Method\n'
   )
-  print(my_metalog$Validation,row.names=FALSE)
-
+  print(object$Validation, row.names = FALSE)
 }
 
 #' Plot of the metalog object
 #'
-#' @param my_metalog metalog object created using \code{r_metalog()}
+#' @param x metalog object created using \code{r_metalog()}
+#' @param ... ignored; included for S3 generic/method consistency
 #'
 #' @return A summary plot of the CDF and PDF for each term
 #'
@@ -225,62 +216,62 @@ r_metalog_summary.rmetalog <- function(my_metalog){
 #'
 #' # Create a bounded metalog object
 #' myMetalog <- r_metalog(fishSize$FishSize,
-#'                       bounds=c(0, 60),
-#'                       boundedness = 'b',
-#'                       term_limit = 13)
+#'                        bounds=c(0, 60),
+#'                        boundedness = 'b',
+#'                        term_limit = 13)
 #'
 #' r_metalog_plot(myMetalog)
-r_metalog_plot <- function(my_metalog) {
-  UseMethod("r_metalog_plot",my_metalog)
-}
-
-#' @export
-r_metalog_plot.default <- function(my_metalog){
-  print('Object must be of class rmetalog')
-}
-
-#' @export
-r_metalog_plot.rmetalog <- function(my_metalog){
+plot.rmetalog <- function(x, ...){
   #build plots
-  InitalResults<-data.frame(term=(rep(paste0(my_metalog$params$term_lower_bound,' Terms'),length(my_metalog$M[,1]))),
-                            pdfValues=my_metalog$M[,1],
-                            quantileValues=my_metalog$M[,2],
-                            cumValue=my_metalog$M$y)
-  if(ncol(my_metalog$M)>3){
-    for(i in 2:(length(my_metalog$M[1,]-1)/2)){
-      TempResults<-data.frame(term=(rep(paste0((my_metalog$params$term_lower_bound+(i-1)),' Terms'),length(my_metalog$M[,1]))),
-                              pdfValues=my_metalog$M[,(i*2-1)],
-                              quantileValues=my_metalog$M[,(i*2)],
-                              cumValue=my_metalog$M$y)
+  InitalResults <-
+    data.frame(
+      term = (rep(
+        paste0(x$params$term_lower_bound, ' Terms'), length(x$M[, 1])
+      )),
+      pdfValues = x$M[, 1],
+      quantileValues = x$M[, 2],
+      cumValue = x$M$y
+    )
 
-      InitalResults<-rbind(InitalResults,TempResults)
+  if (ncol(x$M) > 3) {
+    for (i in 2:(length(x$M[1, ] - 1) / 2)) {
+      TempResults <-
+        data.frame(
+          term = (rep(paste0((x$params$term_lower_bound + (i - 1)), ' Terms'
+          ), length(x$M[, 1]))),
+          pdfValues = x$M[, (i * 2 - 1)],
+          quantileValues = x$M[, (i * 2)],
+          cumValue = x$M$y
+        )
+
+      InitalResults <- rbind(InitalResults, TempResults)
     }
   }
+
   # The base plot
-  q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=pdfValues)) +
-    ggplot2::geom_line(colour="blue") +
+  p <-
+    ggplot2::ggplot(InitalResults, ggplot2::aes(x = quantileValues, y = pdfValues)) +
+    ggplot2::geom_line(colour = "blue") +
     ggplot2::xlab("Quantile Values") +
     ggplot2::ylab("PDF Values") +
     ggplot2::theme_bw()
 
   # Faceted using subpanels
-  q <- q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
+  p <- p + ggplot2::facet_wrap( ~ term, ncol = 4, scales = "free_y")
 
-  print(q)
-
-  readline(prompt="Press [enter] to see CDF plot")
+  # readline(prompt="Press [enter] to see CDF plot")
 
   # The base plot
-  q <- ggplot2::ggplot(InitalResults, ggplot2::aes(x=quantileValues, y=cumValue)) +
-    ggplot2::geom_line(colour="blue") +
+  q <-
+    ggplot2::ggplot(InitalResults, ggplot2::aes(x = quantileValues, y = cumValue)) +
+    ggplot2::geom_line(colour = "blue") +
     ggplot2::xlab("Quantile Values") +
     ggplot2::ylab("CDF Values") +
     ggplot2::theme_bw()
   #q$term<-as.factor(q$term)
 
   # Faceted using subpanels
-  q <- q + ggplot2::facet_wrap(~term,ncol=4,scales="free_y")
+  q <- q + ggplot2::facet_wrap( ~ term, ncol = 4, scales = "free_y")
 
-  print(q)
-
+  list(pdf = p, cdf = q)
 }

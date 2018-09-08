@@ -12,12 +12,12 @@ Imports:
     lpSolve,
     ggplot2
 Suggests:
-    devtools
+    devtools,
+    knitr,
+    rmarkdown
 Depends: R (>= 3.1.0)
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
-Suggests: knitr,
-    rmarkdown
 VignetteBuilder: knitr
