@@ -14,7 +14,8 @@ qmetalog(m, y, term = 3)
 \item{term}{which metalog distribution to sample from}
 }
 \value{
-A numeric vector of quantiles corresponding to the y probability vector
+A numeric vector of quantiles corresponding to the y probability
+  vector
 }
 \description{
 Generate quantiles from a probability from a metalog object

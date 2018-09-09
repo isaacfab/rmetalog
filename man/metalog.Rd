@@ -10,33 +10,43 @@ metalog(x, bounds = c(0, 1), boundedness = "u", term_limit = 13,
 \arguments{
 \item{x}{vector of numeric data}
 
-\item{bounds}{numeric vector specifying lower or upper bounds, none required if the distribution is unbounded}
+\item{bounds}{numeric vector specifying lower or upper bounds, none required
+if the distribution is unbounded}
 
 \item{boundedness}{character string specifying unbounded, semi-bounded upper,
 semi-bounded lower or bounded; accepts values \code{u}, \code{su},
 \code{sl} and \code{b} (default: 'u')}
 
-\item{term_limit}{integer between 3 and 30, specifying the number of metalog distributions to generate.
-Larger term distributions have more flexibility (default: 13)}
+\item{term_limit}{integer between 3 and 30, specifying the number of metalog
+distributions to generate. Larger term distributions have more flexibility
+(default: 13)}
 
-\item{term_lower_bound}{(Optional) the smallest term to generate, used to minimze
-computation must be less than term_limit (default is 2)}
+\item{term_lower_bound}{(Optional) the smallest term to generate, used to
+minimze computation must be less than term_limit (default is 2)}
 
-\item{step_len}{(Optional) size of steps to summarize the distribution (between 0 and 0.01) this is only used if the data vector
-length is greater than 100. Use this if a specific fine grid fit is required. (default is 0.01)}
+\item{step_len}{(Optional) size of steps to summarize the distribution
+(between 0 and 0.01) this is only used if the data vector length is greater
+than 100. Use this if a specific fine grid fit is required. (default is
+0.01)}
 
 \item{probs}{(Optional) probability quantiles, same length as \code{x}}
 }
 \value{
 A \code{metalog} object with elements
 \item{params}{A list of the parameters used to create the metalog object}
-\item{dataValues}{a dataframe with the first column the raw data, second column the cummulative probabilites and the third the z vector}
+\item{dataValues}{a dataframe with the first column the raw data, second
+                  column the cummulative probabilites and the third the z
+                  vector}
 \item{Y}{The Y matrix values for each quantile and term}
 \item{A}{a dataframe of coeficients for each metalog distribution}
-\item{M}{a dataframe of quantiles (M) and probilites (m) indexed for each term (i.e. M3,m3 for the third term)}
-\item{GridPlotCDF()}{a function that displays a grid plot of the CDF for each term}
-\item{VGridPlotPDF()}{a fucntion that displays a gird plot of the PDF for each term}
-\item{Validation}{a vector of yes/no indicators of the valid distributions for each term}
+\item{M}{a dataframe of quantiles (M) and probilites (m) indexed for each
+         term (i.e. M3,m3 for the third term)}
+\item{GridPlotCDF()}{a function that displays a grid plot of the CDF for each
+                     term}
+\item{VGridPlotPDF()}{a fucntion that displays a gird plot of the PDF for
+                      each term}
+\item{Validation}{a vector of yes/no indicators of the valid distributions
+                  for each term}
 }
 \description{
 Fit the Metalog distribution to data
