@@ -2,8 +2,9 @@ Package: RMetalog
 Type: Package
 Title: R Implementation of the Metalog Distribution
 Version: 1.0.0
-Author: Isaac Faber
-Maintainer: Isaac Faber <isaacfab@gmail.com>
+Authors@R: c(
+    person("Isaac", "Faber", email = "isaacfab@gmail.com", role = c("aut", "cre")),
+    person("Jongbin", "Jung", email = "me@jongbin.com", role = c("aut")))
 Description: Implementation of the metalog distribution in R.
     The metalog distribution is a modern, highly flexible, data-driven distribution.
     This package builds metalog distributions from raw data. These distributions are
