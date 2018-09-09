@@ -42,7 +42,7 @@ summary(fishSize)
 The base function for the package to create distributions is:
 
 ``` r
-r_metalog()
+metalog()
 ```
 
 This function takes several inputs:
@@ -58,7 +58,7 @@ This function takes several inputs:
 Here is an example of a lower bounded distribution build.
 
 ``` r
-my_metalog <- r_metalog(fishSize$FishSize,
+my_metalog <- metalog(fishSize$FishSize,
                        term_limit = 9,
                        term_lower_bound = 2,
                        bounds=c(0,60),
@@ -69,7 +69,7 @@ my_metalog <- r_metalog(fishSize$FishSize,
 The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
 
 ``` r
-r_metalog_summary(my_metalog)
+summary(my_metalog)
 #>  -----------------------------------------------
 #>  Summary of Metalog Distribution Object
 #>  -----------------------------------------------
@@ -94,22 +94,24 @@ r_metalog_summary(my_metalog)
 #>     9   yes    OLS
 ```
 
-You can also plot a quick visaul comparison of the distributions by term.
+You can also plot a quick visual comparison of the distributions by term.
 
 ``` r
-r_metalog_plot(my_metalog)
+plot(my_metalog)
+#> $pdf
 ```
 
 ![](README-unnamed-chunk-7-1.png)
 
-    #> Press [enter] to see CDF plot
+    #> 
+    #> $cdf
 
 ![](README-unnamed-chunk-7-2.png)
 
 Once the distributions are built, you can create `n` samples by selecting a term.
 
 ``` r
-s<-r_metalog_sample(my_metalog,n=1000,term=9)
+s<-rmetalog(my_metalog,n=1000,term=9)
 hist(s)
 ```
 
@@ -118,7 +120,7 @@ hist(s)
 You can also retrieve quantile values with a probability in a similar way.
 
 ``` r
-r_metalog_quantile(my_metalog,y=c(0.25,0.5,0.75),term=9)
+qmetalog(my_metalog,y=c(0.25,0.5,0.75),term=9)
 #>             a9
 #> [1,]  7.240623
 #> [2,]  9.840139

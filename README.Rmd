@@ -47,7 +47,7 @@ summary(fishSize)
 The base function for the package to create distributions is:
 
 ```{r eval=FALSE}
-r_metalog()
+metalog()
 ```
 
 This function takes several inputs:
@@ -63,7 +63,7 @@ This function takes several inputs:
 Here is an example of a lower bounded distribution build.
 
 ```{r}
-my_metalog <- r_metalog(fishSize$FishSize,
+my_metalog <- metalog(fishSize$FishSize,
                        term_limit = 9,
                        term_lower_bound = 2,
                        bounds=c(0,60),
@@ -74,26 +74,26 @@ my_metalog <- r_metalog(fishSize$FishSize,
 The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
 
 ```{r}
-r_metalog_summary(my_metalog)
+summary(my_metalog)
 ```
   
-You can also plot a quick visaul comparison of the distributions by term. 
+You can also plot a quick visual comparison of the distributions by term.
 
 ```{r message=FALSE, warning=FALSE}
-r_metalog_plot(my_metalog)
+plot(my_metalog)
 ```  
 
 Once the distributions are built, you can create `n` samples by selecting a term.
 
 ```{r message=FALSE, warning=FALSE}
-s<-r_metalog_sample(my_metalog,n=1000,term=9)
+s<-rmetalog(my_metalog,n=1000,term=9)
 hist(s)
 ```  
 
 You can also retrieve quantile values with a probability in a similar way.
 
 ```{r message=FALSE, warning=FALSE}
-r_metalog_quantile(my_metalog,y=c(0.25,0.5,0.75),term=9)
+qmetalog(my_metalog,y=c(0.25,0.5,0.75),term=9)
 ```  
 
 As this package is under development, any feedback is appreciated! Please submit a pull request or issue if you find anything that needs to be addressed.
