@@ -9,6 +9,7 @@ a_vector_OLS_and_LP <-
            term_lower_bound,
            bounds,
            boundedness,
+           fit_method,
            diff_error = .001,
            diff_step = 0.001) {
     # Some place holder values
@@ -23,6 +24,7 @@ a_vector_OLS_and_LP <-
       Y <- as.matrix(myList$Y[, 1:(i)])
       z <- as.matrix(myList$dataValues$z)
       y <- myList$dataValues$probs
+      step_len <- myList$params$step_len
       methodFit <- 'OLS'
       a <- paste0('a', (i))
       m_name <- paste0('m', i)
@@ -47,17 +49,28 @@ a_vector_OLS_and_LP <-
 
       temp <- c(temp, rep(0, (term_limit - (i))))
 
+      #build a y_test vector for smaller data sets
+      if(length(z)<100){
+        y_test <- seq(step_len, (1 - step_len), step_len)
+        tailstep <- (step_len / 10)
+        y_test <- c(seq(tailstep, (min(y_test) - tailstep), tailstep),
+               y_test,
+               seq((max(y_test) + tailstep), (max(y_test) + tailstep * 9), tailstep))
+      }
+
       # Get the list and quantile values back for validation
       tempList <- pdf_quantile_builder(
         temp,
-        y,
+        y=y_test,
         term_limit = i,
         bounds = bounds,
         boundedness = boundedness
       )
 
       # If it not a valid pdf run and the OLS version was used the LP version
-      if (tempList$valid == 'no' & class(temp) == 'numeric') {
+      if (tempList$valid == 'no' &
+          class(temp) == 'numeric' &
+          fit_method != 'OLS' ) {
         temp <- a_vector_LP(
           myList,
           term_limit = i,
@@ -71,7 +84,7 @@ a_vector_OLS_and_LP <-
         # Get the list and quantile values back for validation
         tempList <- pdf_quantile_builder(
           temp,
-          y,
+          y=y_test,
           term_limit = i,
           bounds = bounds,
           boundedness = boundedness

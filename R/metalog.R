@@ -34,6 +34,8 @@ if(getRversion() >= "2.15.1")
 #'   than 100. Use this if a specific fine grid fit is required. (default is
 #'   0.01)
 #' @param probs (Optional) probability quantiles, same length as \code{x}
+#' @param fit_method (Optional) prefered method of fitting distribution: accepts values
+#'  \code{OLS}, \code{LP} or \code{any} (defaults to any)
 #'
 #' @return A \code{metalog} object with elements
 #' \item{params}{A list of the parameters used to create the metalog object}
@@ -50,6 +52,7 @@ if(getRversion() >= "2.15.1")
 #'                       each term}
 #' \item{Validation}{a vector of yes/no indicators of the valid distributions
 #'                   for each term}
+#'
 #'
 #' @export
 #'
@@ -68,7 +71,8 @@ metalog <- function(x,
                     term_limit = 13,
                     term_lower_bound = 2,
                     step_len = 0.01,
-                    probs = NA) {
+                    probs = NA,
+                    fit_method = 'any') {
   # Input validation
   if (class(x) != 'numeric') {
     stop('Input x must be a numeric vector!')
@@ -86,11 +90,12 @@ metalog <- function(x,
     stop('Error: term_lower_bound parameter should be an integer')
   }
 
-  if (!is.na(probs) & (length(probs) != length(x))) {
+  if (length(which(is.na(probs)))==0 &
+      (length(probs) != length(x))) {
     stop('Error: probs vector and x vector must be the same length')
   }
 
-  if (!is.na(probs)) {
+  if (length(which(is.na(probs)))==0) {
     if (class(probs) != 'numeric') {
       stop('Error: input probabilites must be a numeric vector!')
     }
@@ -121,7 +126,8 @@ metalog <- function(x,
   if (max(bounds) < max(x) & boundedness == 'b') {
     stop('Error: upper bound must be greater than the largest value of x')
   }
-  if (length(bounds) != 1 & (boundedness == 'su' | boundedness == 'sl')) {
+  if (length(bounds) != 1 &
+      (boundedness == 'su' | boundedness == 'sl')) {
     stop('Error: must supply one bound')
   }
 
@@ -134,16 +140,20 @@ metalog <- function(x,
   }
 
   if (boundedness != 'u' &
-      boundedness != 'su' & boundedness != 'sl' & boundedness != 'b') {
+      boundedness != 'su' &
+      boundedness != 'sl' &
+      boundedness != 'b') {
     stop('Error: boundedness parameter must be u, su, sl or b only')
   }
 
-  if (max(x) > bounds[2] & boundedness == 'su') {
+  if (max(x) > bounds[2] &
+      boundedness == 'su') {
     stop('Error: for semi-upper bounded the upper bound must be greater than ',
          'the largest value in x')
   }
 
-  if (min(x) < bounds[1] & boundedness == 'sl') {
+  if (min(x) < bounds[1] &
+      boundedness == 'sl') {
     stop('Error: for semi-lower bounded the lower bound must be less than the ',
          'smallest value in x')
   }
@@ -169,8 +179,15 @@ metalog <- function(x,
     stop('Error: term_lower_bound must have a value of 2 or greater')
   }
 
-  if (step_len < 0.001 | step_len > 0.01) {
-    stop('Error: step_len must be greater than 0.001 and less than 0.01')
+  if (step_len < 0.001 |
+      step_len > 0.01) {
+    stop('Error: step_len must be >= to 0.001 and <= to 0.01')
+  }
+
+  if (fit_method !='OLS' &
+      fit_method !='LP' &
+      fit_method !='any') {
+    stop('Error: fit_method can only be values OLS, LP or any')
   }
 
   # Create a list to hold all the objects
@@ -180,9 +197,9 @@ metalog <- function(x,
   myList$params$term_limit <- term_limit
   myList$params$term_lower_bound <- term_lower_bound
   myList$params$step_len <- step_len
-
+  myList$params$fit_method <- fit_method
   # Handle the probabilites --- this also converts x as a data frame
-  if (is.na(probs)) {
+  if (length(which(is.na(probs)))!=0) {
     x <- MLprobs(x, step_len = step_len)
   } else{
     x <- as.data.frame(x)
@@ -240,6 +257,7 @@ metalog <- function(x,
     term_lower_bound = term_lower_bound,
     bounds = bounds,
     boundedness = boundedness,
+    fit_method = fit_method,
     diff_error = .001,
     diff_step = 0.001
   )

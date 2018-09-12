@@ -221,6 +221,7 @@ summary.metalog <- function(object, ...) {
       'Boundedness: ', object$params$boundedness, '\n',
       'Bounds (only used based on boundedness): ', object$params$bounds, '\n',
       'Step Length for Distribution Summary: ', object$params$step_len, '\n',
+      'Method Use for Fitting: ', object$params$fit_method, '\n',
       '\n\n Validation and Fit Method\n'
   )
   print(object$Validation, row.names = FALSE)

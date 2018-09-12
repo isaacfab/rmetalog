@@ -1,5 +1,4 @@
-# Given an a vector, produce a dataframe with pdf and quantile values for
-# corrisponding cumulants
+# Given an a vector, produce a dataframe with pdf and quantile values for cumulants
 pdf_quantile_builder <-
   function(temp, y, term_limit, bounds, boundedness) {
     myList <- list()

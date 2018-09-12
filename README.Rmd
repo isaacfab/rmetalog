@@ -68,7 +68,7 @@ my_metalog <- metalog(fishSize$FishSize,
                        term_lower_bound = 2,
                        bounds=c(0,60),
                        boundedness = 'b',
-                       step_len = .01)
+                       step_len = 0.01)
 ```
 
 The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
