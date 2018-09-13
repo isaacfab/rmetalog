@@ -26,7 +26,7 @@ This repository is a complement and extension of the information found in the [p
 Once the package is loaded, start by fitting a dataset of observations from a continuous distribution.  For this vignette, we will load the library and use an included example of fish (steelhead trout) weight measurements from the Pacific Northwest.  This data set is illustrative to demonstrate the flexibility of the metalog distribution as it is bi-modal.  The data is installed with the package. Steelhead trout, unlike salmon, return to fresh water multiple times in their lives. However, with a traditional distribution, it is difficult to see the difference in size of between the one salt or two salt (salt being the number of times a fish returned to the ocean).
 
 ```{r}
-library(RMetalog)
+library(rmetalog)
 
 data("fishSize")
 summary(fishSize)

@@ -1,5 +1,5 @@
 ## ------------------------------------------------------------------------
-library(RMetalog)
+library(rmetalog)
 
 data("fishSize")
 summary(fishSize)
@@ -26,4 +26,10 @@ hist(s)
 
 ## ----message=FALSE, warning=FALSE----------------------------------------
 qmetalog(my_metalog, y = c(0.25, 0.5, 0.75), term = 9)
+
+## ----message=FALSE, warning=FALSE----------------------------------------
+pmetalog(my_metalog, q = c(3,10,25), term = 9)
+
+## ----message=FALSE, warning=FALSE----------------------------------------
+dmetalog(my_metalog, q = c(3,10,25), term = 9)
 

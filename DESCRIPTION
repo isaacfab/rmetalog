@@ -1,4 +1,4 @@
-Package: RMetalog
+Package: rmetalog
 Type: Package
 Title: R Implementation of the Metalog Distribution
 Version: 1.0.0

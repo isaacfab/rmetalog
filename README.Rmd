@@ -39,7 +39,7 @@ install_github('isaacfab/RMetalog')
 Once the package is loaded you start with a data set of continuous observations.  For this repository, we will load the library and use an example of fish size measurements from the Pacific Northwest.  This data set is illustrative to demonstrate the flexibility of the metalog distribution as it is bi-modal.  The data is installed with the package.
 
 ```{r}
-library(RMetalog)
+library(rmetalog)
 data("fishSize")
 summary(fishSize)
 ```

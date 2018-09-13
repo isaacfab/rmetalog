@@ -1,9 +1,9 @@
-#' RMetalog: R implementation of the metalog distribution
+#' rmetalog: R implementation of the metalog distribution
 #'
-#' The \code{RMetalog} package implements the metalog distribution in \code{R}
+#' The \code{rmetalog} package implements the metalog distribution in \code{R}
 #'
 #' @docType package
-#' @name RMetalog
+#' @name rmetalog
 #' @importFrom ggplot2 aes
 
 if(getRversion() >= "2.15.1")
@@ -16,7 +16,7 @@ if(getRversion() >= "2.15.1")
   )
 
 
-#' Fit the Metalog distribution to data
+#' Fit the metalog distribution to data
 #'
 #' @param x vector of numeric data
 #' @param term_limit integer between 3 and 30, specifying the number of metalog
