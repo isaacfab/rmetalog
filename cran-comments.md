@@ -9,4 +9,4 @@ There were no ERRORs or WARNINGs.
 * 1 Note - this is the packages first submission
 
 ## Downstream dependencies
-There are currently no downstream dependencies
+There are currently no downstream dependencies.
