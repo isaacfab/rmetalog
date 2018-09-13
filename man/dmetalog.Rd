@@ -2,7 +2,7 @@
 % Please edit documentation in R/class_method.R
 \name{dmetalog}
 \alias{dmetalog}
-\title{Generate desnsity values with quantiles from a metalog object.
+\title{Generate density values with quantiles from a metalog object.
 This is done through a newtons method approximation.}
 \usage{
 dmetalog(m, q, term = 3)
@@ -19,7 +19,7 @@ A numeric vector of probabilities corresponding to the q quantile
   vector
 }
 \description{
-Generate desnsity values with quantiles from a metalog object.
+Generate density values with quantiles from a metalog object.
 This is done through a newtons method approximation.
 }
 \examples{

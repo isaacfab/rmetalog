@@ -99,7 +99,7 @@ rmetalog.metalog <- function(m, n = 1, term = 3){
 #' Generate quantiles with a probability from a metalog object
 #'
 #' @param m metalog object created from \code{metalog()}
-#' @param y  y vector of probabilities
+#' @param y  vector of probabilities
 #' @param term which metalog distribution to sample from
 #'
 #' @return A numeric vector of quantiles corresponding to the y probability
@@ -194,7 +194,7 @@ qmetalog.metalog <- function(m, y, term = 3){
 #' This is done through a newtons method approximation.
 #'
 #' @param m metalog object created from \code{metalog()}
-#' @param q  y vector of quantiles
+#' @param q  vector of quantiles
 #' @param term which metalog distribution to sample from
 #'
 #' @return A numeric vector of probabilities corresponding to the q quantile
@@ -244,7 +244,7 @@ pmetalog.metalog <- function(m, q, term = 3){
  return(qs)
 }
 
-#' Generate desnsity values with quantiles from a metalog object.
+#' Generate density values with quantiles from a metalog object.
 #' This is done through a newtons method approximation.
 #'
 #' @param m metalog object created from \code{metalog()}
@@ -302,7 +302,7 @@ dmetalog.metalog <- function(m, q, term = 3){
 #' Summary of the metalog object
 #'
 #' @param object metalog object created from \code{metalog()}
-#' @param ... other stuff
+#' @param ... ignored; included for S3 generic/method consistency
 #'
 #' @return A summary of the object
 #'

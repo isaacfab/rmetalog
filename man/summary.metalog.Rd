@@ -9,7 +9,7 @@
 \arguments{
 \item{object}{metalog object created from \code{metalog()}}
 
-\item{...}{other stuff}
+\item{...}{ignored; included for S3 generic/method consistency}
 }
 \value{
 A summary of the object

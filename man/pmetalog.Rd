@@ -10,7 +10,7 @@ pmetalog(m, q, term = 3)
 \arguments{
 \item{m}{metalog object created from \code{metalog()}}
 
-\item{q}{y vector of quantiles}
+\item{q}{vector of quantiles}
 
 \item{term}{which metalog distribution to sample from}
 }

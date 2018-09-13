@@ -34,21 +34,21 @@ if(getRversion() >= "2.15.1")
 #'   than 100. Use this if a specific fine grid fit is required. (default is
 #'   0.01)
 #' @param probs (Optional) probability quantiles, same length as \code{x}
-#' @param fit_method (Optional) prefered method of fitting distribution: accepts values
+#' @param fit_method (Optional) preferred method of fitting distribution: accepts values
 #'  \code{OLS}, \code{LP} or \code{any} (defaults to any)
 #'
 #' @return A \code{metalog} object with elements
 #' \item{params}{A list of the parameters used to create the metalog object}
 #' \item{dataValues}{a dataframe with the first column the raw data, second
-#'                   column the cummulative probabilites and the third the z
+#'                   column the cumulative probabilities and the third the z
 #'                   vector}
 #' \item{Y}{The Y matrix values for each quantile and term}
-#' \item{A}{a dataframe of coeficients for each metalog distribution}
-#' \item{M}{a dataframe of quantiles (M) and probilites (m) indexed for each
+#' \item{A}{a dataframe of coefficients for each metalog distribution}
+#' \item{M}{a dataframe of quantiles (M) and probabilities (m) indexed for each
 #'          term (i.e. M3,m3 for the third term)}
 #' \item{GridPlotCDF()}{a function that displays a grid plot of the CDF for each
 #'                      term}
-#' \item{VGridPlotPDF()}{a fucntion that displays a gird plot of the PDF for
+#' \item{VGridPlotPDF()}{a function that displays a gird plot of the PDF for
 #'                       each term}
 #' \item{Validation}{a vector of yes/no indicators of the valid distributions
 #'                   for each term}

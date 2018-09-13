@@ -9,7 +9,7 @@ qmetalog(m, y, term = 3)
 \arguments{
 \item{m}{metalog object created from \code{metalog()}}
 
-\item{y}{y vector of probabilities}
+\item{y}{vector of probabilities}
 
 \item{term}{which metalog distribution to sample from}
 }

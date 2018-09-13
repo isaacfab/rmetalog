@@ -63,7 +63,7 @@ my_metalog <- metalog(fishSize$FishSize,
                        term_lower_bound = 2,
                        bounds=c(0,60),
                        boundedness = 'b',
-                       step_len = .01)
+                       step_len = 0.01)
 ```
 
 The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
@@ -80,6 +80,7 @@ summary(my_metalog)
 #>  Boundedness:  b 
 #>  Bounds (only used based on boundedness):  0 60 
 #>  Step Length for Distribution Summary:  0.01 
+#>  Method Use for Fitting:  any 
 #>  
 #> 
 #>  Validation and Fit Method
@@ -117,14 +118,25 @@ hist(s)
 
 ![](README-unnamed-chunk-8-1.png)
 
-You can also retrieve quantile values with a probability in a similar way.
+You can also retrieve quantile, density, and probability values similar to other R distributions.
 
 ``` r
-qmetalog(my_metalog,y=c(0.25,0.5,0.75),term=9)
-#>             a9
-#> [1,]  7.240623
-#> [2,]  9.840139
-#> [3,] 12.063061
+qmetalog(my_metalog, y = c(0.25, 0.5, 0.75), term = 9)
+#> [1]  7.240623  9.840139 12.063061
+```
+
+probabilities from a quantile.
+
+``` r
+pmetalog(my_metalog, q = c(3,10,25), term = 9)
+#> [1] 0.00195673 0.52005826 0.99226703
+```
+
+density from a quantile.
+
+``` r
+dmetalog(my_metalog, q = c(3,10,25), term = 9)
+#> [1] 0.004489508 0.126724357 0.002264396
 ```
 
 As this package is under development, any feedback is appreciated! Please submit a pull request or issue if you find anything that needs to be addressed.

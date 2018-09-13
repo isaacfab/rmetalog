@@ -90,10 +90,22 @@ s<-rmetalog(my_metalog,n=1000,term=9)
 hist(s)
 ```  
 
-You can also retrieve quantile values with a probability in a similar way.
+You can also retrieve quantile, density, and probability values similar to other R distributions.
 
 ```{r message=FALSE, warning=FALSE}
-qmetalog(my_metalog,y=c(0.25,0.5,0.75),term=9)
+qmetalog(my_metalog, y = c(0.25, 0.5, 0.75), term = 9)
+``` 
+
+probabilities from a quantile.
+
+```{r message=FALSE, warning=FALSE}
+pmetalog(my_metalog, q = c(3,10,25), term = 9)
+``` 
+
+density from a quantile.
+
+```{r message=FALSE, warning=FALSE}
+dmetalog(my_metalog, q = c(3,10,25), term = 9)
 ```  
 
 As this package is under development, any feedback is appreciated! Please submit a pull request or issue if you find anything that needs to be addressed.
