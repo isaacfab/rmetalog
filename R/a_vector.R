@@ -49,19 +49,19 @@ a_vector_OLS_and_LP <-
 
       temp <- c(temp, rep(0, (term_limit - (i))))
 
-      #build a y_test vector for smaller data sets
+      #build a y vector for smaller data sets
       if(length(z)<100){
-        y_test <- seq(step_len, (1 - step_len), step_len)
+        y <- seq(step_len, (1 - step_len), step_len)
         tailstep <- (step_len / 10)
-        y_test <- c(seq(tailstep, (min(y_test) - tailstep), tailstep),
-               y_test,
-               seq((max(y_test) + tailstep), (max(y_test) + tailstep * 9), tailstep))
+        y <- c(seq(tailstep, (min(y) - tailstep), tailstep),
+               y,
+               seq((max(y) + tailstep), (max(y) + tailstep * 9), tailstep))
       }
 
       # Get the list and quantile values back for validation
       tempList <- pdf_quantile_builder(
         temp,
-        y=y_test,
+        y=y,
         term_limit = i,
         bounds = bounds,
         boundedness = boundedness
@@ -84,7 +84,7 @@ a_vector_OLS_and_LP <-
         # Get the list and quantile values back for validation
         tempList <- pdf_quantile_builder(
           temp,
-          y=y_test,
+          y=y,
           term_limit = i,
           bounds = bounds,
           boundedness = boundedness

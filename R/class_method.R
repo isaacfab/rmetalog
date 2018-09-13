@@ -92,11 +92,11 @@ rmetalog.metalog <- function(m, n = 1, term = 3){
       (1 + exp(s))
   }
 
- return(s)
+  return(as.numeric(s))
 }
 
 
-#' Generate quantiles from a probability from a metalog object
+#' Generate quantiles with a probability from a metalog object
 #'
 #' @param m metalog object created from \code{metalog()}
 #' @param y  y vector of probabilities
@@ -187,9 +187,117 @@ qmetalog.metalog <- function(m, y, term = 3){
     s <- (m$params$bounds[1] + (m$params$bounds[2]) * exp(s)) / (1 + exp(s))
   }
 
-  return(s)
+  return(as.numeric(s))
 }
 
+#' Generate probabilities with quantiles from a metalog object.
+#' This is done through a newtons method approximation.
+#'
+#' @param m metalog object created from \code{metalog()}
+#' @param q  y vector of quantiles
+#' @param term which metalog distribution to sample from
+#'
+#' @return A numeric vector of probabilities corresponding to the q quantile
+#'   vector
+#'
+#' @export
+#'
+#' @examples
+#' # Load example data
+#' data("fishSize")
+#'
+#' # Create a bounded metalog object
+#' myMetalog <- metalog(fishSize$FishSize,
+#'                      bounds=c(0, 60),
+#'                      boundedness = 'b',
+#'                      term_limit = 9,
+#'                      term_lower_bound = 9)
+#'
+#' s <- pmetalog(myMetalog,q=c(3,10,25),term = 9)
+pmetalog <- function(m, q, term = 3) {
+  UseMethod("pmetalog", m)
+}
+
+pmetalog.default <- function(m, q, term = 3){
+  print('Object must be of class metalog')
+}
+
+#' @export
+pmetalog.metalog <- function(m, q, term = 3){
+  # Input validation
+  valid_terms <- m$Validation$term
+  if (class(q) != 'numeric') {
+    stop('Error: q must be a positive numeric vector between 0 and 1')
+  }
+
+  if (class(term) != 'numeric' |
+      term < 2 | term %% 1 != 0 | !(term %in% valid_terms) |
+      length(term) > 1) {
+    stop(
+      paste('Error: term must be a single positive numeric interger contained',
+            'in the metalog object. Available terms are:',
+            valid_terms)
+    )
+  }
+
+ qs<-sapply(q,newtons_method_metalog,m=m,t=term)
+ return(qs)
+}
+
+#' Generate desnsity values with quantiles from a metalog object.
+#' This is done through a newtons method approximation.
+#'
+#' @param m metalog object created from \code{metalog()}
+#' @param q  y vector of quantiles
+#' @param term which metalog distribution to sample from
+#'
+#' @return A numeric vector of probabilities corresponding to the q quantile
+#'   vector
+#'
+#' @export
+#'
+#' @examples
+#' # Load example data
+#' data("fishSize")
+#'
+#' # Create a bounded metalog object
+#' myMetalog <- metalog(fishSize$FishSize,
+#'                      bounds=c(0, 60),
+#'                      boundedness = 'b',
+#'                      term_limit = 9,
+#'                      term_lower_bound = 9)
+#'
+#' s <- dmetalog(myMetalog,q=c(3,10,25),term = 9)
+dmetalog <- function(m, q, term = 3) {
+  UseMethod("dmetalog", m)
+}
+
+dmetalog.default <- function(m, q, term = 3){
+  print('Object must be of class metalog')
+}
+
+#' @export
+dmetalog.metalog <- function(m, q, term = 3){
+  # Input validation
+  valid_terms <- m$Validation$term
+  if (class(q) != 'numeric') {
+    stop('Error: q must be a numeric vector')
+  }
+
+  if (class(term) != 'numeric' |
+      term < 2 | term %% 1 != 0 | !(term %in% valid_terms) |
+      length(term) > 1) {
+    stop(
+      paste('Error: term must be a single positive numeric interger contained',
+            'in the metalog object. Available terms are:',
+            valid_terms)
+    )
+  }
+
+  qs<-sapply(q,newtons_method_metalog,m=m,term=term)
+  ds<-sapply(qs,pdfMetalog_density, m=m,t=term)
+  return(ds)
+}
 
 #' Summary of the metalog object
 #'

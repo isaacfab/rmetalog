@@ -45,11 +45,6 @@ pdfMetalog <- function(a,
                        t,
                        bounds = c(),
                        boundedness = 'u') {
-  # TODO: Input validation
-  #   a is a numeric vector,
-  #   y is a number between 0, 1
-  #   t is greater than a*
-
   d <- y * (1 - y)
   f <- (y - 0.5)
   l <- log(y / (1 - y))
@@ -88,8 +83,8 @@ pdfMetalog <- function(a,
     }
   }
 
-  # Some change of variables here
-  # TODO: Overwriting x here could be potentially confusing for future readers
+  # Some change of variables here for boundedness
+
   x <- (x^(-1))
 
   if (boundedness != 'u') {
@@ -225,3 +220,102 @@ diffMatMetalog <- function(term_limit, step_len) {
 
   return(new_Diff)
 }
+
+newtons_method_metalog <- function(m,q,term){
+  #a simple newtons method application
+  alpha_step<-0.01
+  err<-0.0000001
+  temp_err<-0.1
+  y_now<-0.5
+  avec<-paste0('a',term)
+  a<-m$A[,`avec`]
+  i<-1
+  while(temp_err>err){
+    frist_function<-(quantileMetalog(a,y_now,term,m$params$bounds,m$params$boundedness)-q)
+    derv_function<-pdfMetalog(a,y_now,term,m$params$bounds,m$params$boundedness)
+    y_next<-y_now-alpha_step*(frist_function*derv_function)
+    temp_err<-abs((y_next-y_now))
+    if(y_next>1){
+      y_next<-0.99999
+    }
+    if(y_next<0){
+      y_next<-0.000001
+    }
+    y_now<-y_next
+    i<-i+1
+    if(i>10000){
+      stop(paste0('Approximation taking too long, quantile value: ',q,' is to far from distribution median. Try plot() to see distribution.'))
+    }
+  }
+
+  return(y_now)
+}
+
+pdfMetalog_density <- function(m,t,y) {
+
+  avec<-paste0('a',t)
+  a<-m$A[,`avec`]
+  bounds<-m$params$bounds
+  boundedness<-m$params$boundedness
+
+  d <- y * (1 - y)
+  f <- (y - 0.5)
+  l <- log(y / (1 - y))
+
+  # Initiate pdf
+
+  # For the first three terms
+  x <- (a[2] / d)
+  if (a[3] != 0) {
+    x <- x + a[3] * ((f / d) + l)
+  }
+
+  # For the fourth term
+  if (t > 3) {
+    x <- x + a[4]
+  }
+
+  # Initalize some counting variables
+  e <- 1
+  o <- 1
+
+  # For all other terms greater than 4
+  if (t > 4) {
+    for (i in 5:t) {
+      if (i %% 2 != 0) {
+        # iff odd
+        x <- x + ((o + 1) * a[i] * f^o)
+        o <- o + 1
+      }
+
+      if (i %% 2 == 0) {
+        # iff even
+        x <- x + a[i] * (((f^(e + 1)) / d) + (e + 1) * (f^e) * l)
+        e <- e + 1
+      }
+    }
+  }
+
+  # Some change of variables here for boundedness
+
+  x <- (x^(-1))
+
+  if (boundedness != 'u') {
+    M <- quantileMetalog(a, y, t, bounds = bounds, boundedness = 'u')
+  }
+
+  if (boundedness == 'sl') {
+    x <- x * exp(-M)
+  }
+
+  if (boundedness == 'su') {
+    x <- x * exp(M)
+  }
+
+  if (boundedness == 'b') {
+    x <- (x * (1 + exp(M))^2) / ((bounds[2] - bounds[1]) * exp(M))
+  }
+
+  return(x)
+}
+
