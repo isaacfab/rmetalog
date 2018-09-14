@@ -3,6 +3,5 @@
 ^README\.Rmd$
 ^README-.*\.png$
 ^README\.md$
-^NEWS\.md$
 ^cran-comments\.md$
 ^readme_figs\.*$
