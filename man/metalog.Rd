@@ -5,7 +5,8 @@
 \title{Fit the metalog distribution to data}
 \usage{
 metalog(x, bounds = c(0, 1), boundedness = "u", term_limit = 13,
-  term_lower_bound = 2, step_len = 0.01, probs = NA, fit_method = "any")
+  term_lower_bound = 2, step_len = 0.01, probs = NA,
+  fit_method = "any")
 }
 \arguments{
 \item{x}{vector of numeric data}
