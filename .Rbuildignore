@@ -1,7 +1,5 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
-^README-.*\.png$
-^README\.md$
 ^cran-comments\.md$
-^readme_figs\.*$
+

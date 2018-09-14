@@ -17,6 +17,7 @@ Suggests:
     knitr,
     rmarkdown
 Depends: R (>= 3.1.0)
+BugReports: https://github.com/isaacfab/rmetalog/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
