@@ -102,12 +102,12 @@ plot(my_metalog)
 #> $pdf
 ```
 
-![](README-unnamed-chunk-7-1.png)
+![](man/figures/README-unnamed-chunk-7-1.png)
 
     #> 
     #> $cdf
 
-![](README-unnamed-chunk-7-2.png)
+![](man/figures/README-unnamed-chunk-7-2.png)
 
 Once the distributions are built, you can create `n` samples by selecting a term.
 
@@ -116,7 +116,7 @@ s<-rmetalog(my_metalog,n=1000,term=9)
 hist(s)
 ```
 
-![](README-unnamed-chunk-8-1.png)
+![](man/figures/README-unnamed-chunk-8-1.png)
 
 You can also retrieve quantile, density, and probability values similar to other R distributions.
 
