@@ -28,7 +28,7 @@ if(getRversion() >= "2.15.1")
 #'   semi-bounded lower or bounded; accepts values \code{u}, \code{su},
 #'   \code{sl} and \code{b} (default: 'u')
 #' @param term_lower_bound (Optional) the smallest term to generate, used to
-#'   minimze computation must be less than term_limit (default is 2)
+#'   minimize computation of unwanted terms must be less than term_limit (default is 2)
 #' @param step_len (Optional) size of steps to summarize the distribution
 #'   (between 0 and 0.01) this is only used if the data vector length is greater
 #'   than 100. Use this if a specific fine grid fit is required. (default is

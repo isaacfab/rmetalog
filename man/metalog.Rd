@@ -22,7 +22,7 @@ distributions to generate. Larger term distributions have more flexibility
 (default: 13)}
 
 \item{term_lower_bound}{(Optional) the smallest term to generate, used to
-minimze computation must be less than term_limit (default is 2)}
+minimize computation of unwanted terms must be less than term_limit (default is 2)}
 
 \item{step_len}{(Optional) size of steps to summarize the distribution
 (between 0 and 0.01) this is only used if the data vector length is greater
