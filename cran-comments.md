@@ -1,7 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* updated the doi format in the description
+* updated the doi format in the description and added orcid id
 
 ## Test environments
 * local OS highSierra x86_64-apple-darwin15.6.0 (64-bit), R 3.4.2
