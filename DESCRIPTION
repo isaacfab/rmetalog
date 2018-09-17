@@ -3,11 +3,11 @@ Type: Package
 Title: R Implementation of the Metalog Distribution
 Version: 1.0.0
 Authors@R: c(
-    person("Isaac", "Faber", email = "isaacfab@gmail.com", role = c("aut", "cre")),
+    person("Isaac", "Faber", email = "isaacfab@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4478-9598")),
     person("Jongbin", "Jung", email = "me@jongbin.com", role = c("aut")))
 Description: Implementation of the metalog distribution in R.
     The metalog distribution is a modern, highly flexible, data-driven distribution. 
-    Metalogs are developed by Keelin (2016) <doi:https://doi.org/10.1287/deca.2016.0338>.
+    Metalogs are developed by Keelin (2016) <doi:10.1287/deca.2016.0338>.
     This package provides functions to build these distributions from raw data. 
     Resulting metalog objects are then useful for exploratory and probabilistic analysis.
 Imports:
