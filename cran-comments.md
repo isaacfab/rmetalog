@@ -1,8 +1,7 @@
 ## Resubmission
 This is a resubmission. In this version I have:
 
-* Used the MIT Licnense template from CRAN
-* included package methods author reference in the description
+* updated the doi format in the description
 
 ## Test environments
 * local OS highSierra x86_64-apple-darwin15.6.0 (64-bit), R 3.4.2
