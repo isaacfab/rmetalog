@@ -1,5 +1,5 @@
 ---
-title: "README"
+title: "RMetalog"
 author: "Isaac J. Faber"
 output: github_document
 ---
@@ -13,6 +13,8 @@ knitr::opts_chunk$set(
   fig.path = "man/figures/README-"
 )
 ```
+
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/rmetalog)](http://cran.r-project.org/package=rmetalog)
 
 ### The R Metalog Distribution
 
@@ -28,12 +30,17 @@ This repository is a complement and extension of the information found in the [p
 
 ### Using the package
 
-To install the package from this repository use the following:
+Install from CRAN:
+
+```{r eval=FALSE}
+install.packages('rmetalog')
+```
+
+or, install the dev package from this repository:
 
 ```{r eval=FALSE}
 library(devtools)
 install_github('isaacfab/RMetalog')
-
 ```
 
 Once the package is loaded you start with a data set of continuous observations.  For this repository, we will load the library and use an example of fish size measurements from the Pacific Northwest.  This data set is illustrative to demonstrate the flexibility of the metalog distribution as it is bi-modal.  The data is installed with the package.
@@ -63,12 +70,14 @@ This function takes several inputs:
 Here is an example of a lower bounded distribution build.
 
 ```{r}
-my_metalog <- metalog(fishSize$FishSize,
-                       term_limit = 9,
-                       term_lower_bound = 2,
-                       bounds=c(0,60),
-                       boundedness = 'b',
-                       step_len = 0.01)
+my_metalog <- metalog(
+  fishSize$FishSize,
+  term_limit = 9,
+  term_lower_bound = 2,
+  bounds = c(0, 60),
+  boundedness = 'b',
+  step_len = 0.01
+  )
 ```
 
 The function returns an object of class `rmetalog` and `list`. You can get a summary of the distributions using `summary`.
@@ -76,39 +85,37 @@ The function returns an object of class `rmetalog` and `list`. You can get a sum
 ```{r}
 summary(my_metalog)
 ```
-  
+
 You can also plot a quick visual comparison of the distributions by term.
 
 ```{r message=FALSE, warning=FALSE}
 plot(my_metalog)
-```  
+```
 
 Once the distributions are built, you can create `n` samples by selecting a term.
 
 ```{r message=FALSE, warning=FALSE}
-s<-rmetalog(my_metalog,n=1000,term=9)
+s <- rmetalog(my_metalog, n = 1000, term = 9)
 hist(s)
-```  
+```
 
 You can also retrieve quantile, density, and probability values similar to other R distributions.
 
 ```{r message=FALSE, warning=FALSE}
 qmetalog(my_metalog, y = c(0.25, 0.5, 0.75), term = 9)
-``` 
+```
 
 probabilities from a quantile.
 
 ```{r message=FALSE, warning=FALSE}
-pmetalog(my_metalog, q = c(3,10,25), term = 9)
-``` 
+pmetalog(my_metalog, q = c(3, 10, 25), term = 9)
+```
 
 density from a quantile.
 
 ```{r message=FALSE, warning=FALSE}
-dmetalog(my_metalog, q = c(3,10,25), term = 9)
-```  
+dmetalog(my_metalog, q = c(3, 10, 25), term = 9)
+```
 
-As this package is under development, any feedback is appreciated! Please submit a pull request or issue if you find anything that needs to be addressed.
-
-
-
+As this package is under development, any feedback is appreciated!
+Please submit a pull request or issue if you find anything that needs to be addressed.
