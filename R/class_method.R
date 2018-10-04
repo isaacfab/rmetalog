@@ -34,6 +34,7 @@ rmetalog.default <- function(m, n = 1, term = 3) {
 rmetalog.metalog <- function(m, n = 1, term = 3){
   # Input validation
   valid_terms <- m$Validation$term
+  valid_terms_printout <- paste(valid_terms, collapse = " ")
   if (class(n) != 'numeric' | n < 1 | n %% 1 != 0) {
     stop('Error: n must be a positive numeric interger')
   }
@@ -41,11 +42,8 @@ rmetalog.metalog <- function(m, n = 1, term = 3){
       term < 2 | term %% 1 != 0 | !(term %in% valid_terms) |
       length(term) > 1) {
     stop(
-      paste(
-        'Error: term must be a single positive numeric interger",
-        "contained in the metalog object. Available terms are:',
-        valid_terms
-      )
+      paste('Error: term must be a single positive numeric interger contained',
+            'in the metalog object. Available terms are:', valid_terms_printout)
     )
   }
   x <- stats::runif(n)
@@ -53,7 +51,10 @@ rmetalog.metalog <- function(m, n = 1, term = 3){
 
   # Construct initial Y Matrix values
   Y$y2 <- (log(x / (1 - x)))
-  Y$y3 <- (x - 0.5) * Y$y2
+
+  if (term > 2) {
+    Y$y3 <- (x - 0.5) * Y$y2
+  }
 
   if (term > 3) {
     Y$y4 <- x - 0.5
@@ -76,7 +77,7 @@ rmetalog.metalog <- function(m, n = 1, term = 3){
   Y <- as.matrix(Y)
   amat <- paste0('a', term)
   a <- as.matrix(m$A[`amat`])
-  s <- Y %*% a
+  s <- Y %*% a[1:term]
 
   if (m$params$boundedness == 'sl') {
     s <- m$params$bounds[1] + exp(s)
@@ -132,6 +133,7 @@ qmetalog.default <- function(m, y, term = 3){
 qmetalog.metalog <- function(m, y, term = 3){
   # Input validation
   valid_terms <- m$Validation$term
+  valid_terms_printout <- paste(valid_terms, collapse = " ")
   if (class(y) != 'numeric' | max(y) >= 1 | min(y) <= 0) {
     stop('Error: y must be a positive numeric vector between 0 and 1')
   }
@@ -141,8 +143,7 @@ qmetalog.metalog <- function(m, y, term = 3){
       length(term) > 1) {
     stop(
       paste('Error: term must be a single positive numeric interger contained',
-            'in the metalog object. Available terms are:',
-            valid_terms)
+            'in the metalog object. Available terms are:', valid_terms_printout)
     )
   }
 
@@ -150,7 +151,10 @@ qmetalog.metalog <- function(m, y, term = 3){
 
   # Construct the Y Matrix initial values
   Y$y2 <- (log(y / (1 - y)))
-  Y$y3 <- (y - 0.5) * Y$y2
+
+  if (term > 2) {
+    Y$y3 <- (x - 0.5) * Y$y2
+  }
 
   if (term > 3) {
     Y$y4 <- (y - 0.5)
@@ -173,7 +177,7 @@ qmetalog.metalog <- function(m, y, term = 3){
   Y <- as.matrix(Y)
   amat <- paste0('a', term)
   a <- as.matrix(m$A[`amat`])
-  s <- Y %*% a
+  s <- Y %*% a[1:term]
 
   if (m$params$boundedness == 'sl') {
     s <- m$params$bounds[1] + exp(s)
@@ -234,7 +238,7 @@ pmetalog.metalog <- function(m, q, term = 3){
       term < 2 | term %% 1 != 0 | !(term %in% valid_terms) |
       length(term) > 1) {
     stop(
-      paste('Error: term must be a single positive numeric interger contained',
+      cat('Error: term must be a single positive numeric interger contained',
             'in the metalog object. Available terms are:',
             valid_terms)
     )

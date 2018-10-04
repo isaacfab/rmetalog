@@ -3,6 +3,7 @@
 \docType{package}
 \name{rmetalog}
 \alias{rmetalog}
+\alias{rmetalog}
 \alias{rmetalog-package}
 \title{Create random samples from an metalog distribution object}
 \usage{
@@ -19,6 +20,8 @@ rmetalog(m, n = 1, term = 3)
 A numeric vector of n random samples from a selected distribution
 }
 \description{
+Create random samples from an metalog distribution object
+
 The \code{rmetalog} package implements the metalog distribution in \code{R}
 }
 \examples{
