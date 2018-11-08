@@ -53,7 +53,7 @@ or, install the dev package from this repository:
 
 ``` r
 library(devtools)
-install_github('isaacfab/RMetalog')
+install_github('isaacfab/rmetalog')
 ```
 
 Once the package is loaded you start with a data set of continuous
