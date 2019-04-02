@@ -13,7 +13,7 @@ for the metalog distribution. The metalog distribution is a highly
 flexible probability distribution that can be used to model data without
 traditional parameters.
 
-### Metalog Background
+### Metalog Distribution Background
 
 In economics, business, engineering, science and other fields,
 continuous uncertainties frequently arise that are not easily- or
