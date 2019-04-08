@@ -35,6 +35,7 @@ a_vector_OLS_and_LP <-
       # Try to use the OLS approach
       temp <- try(((solve(t(Y) %*% Y) %*% t(Y)) %*% z), silent = TRUE)
 
+
       # Use LP if temp is not a valid numeric vector
       if (class(temp) != 'matrix') {
         temp <- a_vector_LP(
@@ -114,6 +115,15 @@ a_vector_OLS_and_LP <-
 
     colnames(A) <- c_a_names
     colnames(Mh) <- c_m_names
+    a1 <- data.frame(a1 = rep(1,nrow(A)))
+
+    #calculate the error on the data values
+    A <- cbind(a1, A)
+    Est <- as.matrix(myList$Y) %*% as.matrix(A)
+    Z <- matrix(cbind(rep(myList$dataValues$z,ncol(A))),ncol = ncol(A))
+    myList$params$square_residual_error <- colSums((Z - Est)^2)
+    colnames(myList$params$square_residual_error) <- NULL
+
     myList$A <- A
     myList$M <- Mh
     myList$M$y <- tempList$y

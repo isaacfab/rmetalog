@@ -1,7 +1,7 @@
 Package: rmetalog
 Type: Package
 Title: R Implementation of the Metalog Distribution
-Version: 1.0.1.9000
+Version: 1.0.2
 Authors@R: c(
     person("Isaac", "Faber", email = "isaacfab@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4478-9598")),
     person("Jongbin", "Jung", email = "me@jongbin.com", role = c("aut")))
@@ -22,5 +22,5 @@ BugReports: https://github.com/isaacfab/rmetalog/issues
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1
 VignetteBuilder: knitr

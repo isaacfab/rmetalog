@@ -5,7 +5,8 @@
 \title{Fit the metalog distribution to data}
 \usage{
 metalog(x, bounds = c(0, 1), boundedness = "u", term_limit = 13,
-  term_lower_bound = 2, step_len = 0.01, probs = NA, fit_method = "any")
+  term_lower_bound = 2, step_len = 0.01, probs = NA,
+  fit_method = "any", save_data = FALSE)
 }
 \arguments{
 \item{x}{vector of numeric data}
@@ -33,6 +34,9 @@ than 100. Use this if a specific fine grid fit is required. (default is
 
 \item{fit_method}{(Optional) preferred method of fitting distribution: accepts values
 \code{OLS}, \code{LP} or \code{any} (defaults to any)}
+
+\item{save_data}{(Optional) Save the original data within the metalog object. This
+must be done if the distribution is to be updated with new data later.}
 }
 \value{
 A \code{metalog} object with elements

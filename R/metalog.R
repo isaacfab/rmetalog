@@ -36,6 +36,8 @@ if(getRversion() >= "2.15.1")
 #' @param probs (Optional) probability quantiles, same length as \code{x}
 #' @param fit_method (Optional) preferred method of fitting distribution: accepts values
 #'  \code{OLS}, \code{LP} or \code{any} (defaults to any)
+#' @param save_data (Optional) Save the original data within the metalog object. This
+#'   must be done if the distribution is to be updated with new data later.
 #'
 #' @return A \code{metalog} object with elements
 #' \item{params}{A list of the parameters used to create the metalog object}
@@ -72,7 +74,8 @@ metalog <- function(x,
                     term_lower_bound = 2,
                     step_len = 0.01,
                     probs = NA,
-                    fit_method = 'any') {
+                    fit_method = 'any',
+                    save_data = FALSE) {
   # Input validation
   if (class(x) != 'numeric') {
     stop('Input x must be a numeric vector!')
@@ -190,6 +193,13 @@ metalog <- function(x,
     stop('Error: fit_method can only be values OLS, LP or any')
   }
 
+  if (save_data != TRUE & save_data != FALSE){
+    stop('Error: save_data must be true or false')
+  }
+
+  if(save_data == TRUE){
+    print('You have opted to save your original data. Saving large data can impact performance of the distribution.')
+  }
   # Create a list to hold all the objects
   myList <- list()
   myList$params$bounds <- bounds
@@ -198,6 +208,12 @@ metalog <- function(x,
   myList$params$term_lower_bound <- term_lower_bound
   myList$params$step_len <- step_len
   myList$params$fit_method <- fit_method
+  myList$params$number_of_data <- length(x)
+  myList$params$save_data <- save_data
+  if (save_data == TRUE){
+    myList$params$original_data <- x #this stores the original data for later use when bayesian updating
+  }
+
   # Handle the probabilites --- this also converts x as a data frame
   if (length(which(is.na(probs)))!=0) {
     x <- MLprobs(x, step_len = step_len)
@@ -249,6 +265,7 @@ metalog <- function(x,
   }
   myList$Y <- Y
 
+
   # Build a vectors for each term and
   # build the metalog m(pdf) and M(quantile) dataframes
   myList <- a_vector_OLS_and_LP(
@@ -261,6 +278,48 @@ metalog <- function(x,
     diff_error = .001,
     diff_step = 0.001
   )
+
+  # Build the Components for Baysiean Updating
+  if(save_data == TRUE & term_lower_bound <= 3){
+    Y <- as.matrix(myList$Y)
+    gamma <- (t(Y) %*% Y)
+    myList$params$bayes$gamma <- gamma
+    myList$params$bayes$mu <- myList$A
+    v <- c()
+    for(i in term_lower_bound:term_limit){
+      v <- c(v, (myList$params$number_of_data-i))
+    }
+    a <- v/2
+    myList$params$bayes$a <- a
+    myList$params$bayes$v <- v
+    #for now we will just use the 3 term standard metalog
+    v <- v[2]
+    a <- a[2]
+    # use the simple 3 term standard form
+    s <- c(.1,.5,.9)
+    Ys <- data.frame(y1 = rep(1, 3))
+
+    # Construct the Y Matrix initial values
+    Ys$y2 <- (log(s / (1 - s)))
+    Ys$y3 <- (s - 0.5) * Ys$y2
+    Ys <- as.matrix(Ys)
+    q_bar <- Ys %*% (as.matrix(myList$A$a3[1:3]))
+    myList$params$bayes$q_bar <- q_bar
+    rm(s)
+
+    # estimate b using q_90 assessment
+    #est <- (q_bar[3]-q_bar[2])/2 + q_bar[2]
+    #s2 <- ((est - q_bar[2]) / qt(.9, v))^2
+    #s2 <- ((14.5 - q_bar[2]) / qt(.9, v))^2
+    gamma <- gamma[1:3,1:3]
+
+    # build the covariance matrix for the students t
+    sig <- Ys %*% solve(gamma) %*% t(Ys)
+    b <- 0.5 * myList$params$square_residual_error[length(myList$params$square_residual_error)]
+
+    myList$params$bayes$sig <- (b/a) * sig
+    myList$params$bayes$b <- b
+  }
 
   class(myList) <- append("metalog", class(myList))
 
