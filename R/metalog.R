@@ -197,9 +197,6 @@ metalog <- function(x,
     stop('Error: save_data must be true or false')
   }
 
-  if(save_data == TRUE){
-    print('You have opted to save your original data. Saving large data can impact performance of the distribution.')
-  }
   # Create a list to hold all the objects
   myList <- list()
   myList$params$bounds <- bounds
