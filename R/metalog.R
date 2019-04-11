@@ -305,15 +305,15 @@ metalog <- function(x,
     rm(s)
 
     # estimate b using q_90 assessment
-    #est <- (q_bar[3]-q_bar[2])/2 + q_bar[2]
-    #s2 <- ((est - q_bar[2]) / qt(.9, v))^2
+    est <- (q_bar[3]-q_bar[2])/2 + q_bar[2]
+    s2 <- ((est - q_bar[2]) / qt(.9, v))^2
     #s2 <- ((14.5 - q_bar[2]) / qt(.9, v))^2
     gamma <- gamma[1:3,1:3]
 
     # build the covariance matrix for the students t
     sig <- Ys %*% solve(gamma) %*% t(Ys)
-    b <- 0.5 * myList$params$square_residual_error[length(myList$params$square_residual_error)]
-
+    #b <- 0.5 * myList$params$square_residual_error[length(myList$params$square_residual_error)]
+    b <- (a * s2) / gamma[2,2]
     myList$params$bayes$sig <- (b/a) * sig
     myList$params$bayes$b <- b
   }
