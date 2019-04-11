@@ -305,9 +305,10 @@ metalog <- function(x,
     rm(s)
 
     # estimate b using q_90 assessment
-    est <- (q_bar[3]-q_bar[2])/2 + q_bar[2]
-    s2 <- ((est - q_bar[2]) / qt(.9, v))^2
-    #s2 <- ((14.5 - q_bar[2]) / qt(.9, v))^2
+    #est <- (q_bar[3]-q_bar[2])/2 + q_bar[2]
+
+    #s2 <- ((est - q_bar[2]) / qt(.9, v))^2
+    s2 <- ((q_bar[3] - q_bar[2]) / qt(.9, v))^2
     gamma <- gamma[1:3,1:3]
 
     # build the covariance matrix for the students t
