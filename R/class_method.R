@@ -153,7 +153,7 @@ qmetalog.metalog <- function(m, y, term = 3){
   Y$y2 <- (log(y / (1 - y)))
 
   if (term > 2) {
-    Y$y3 <- (x - 0.5) * Y$y2
+    Y$y3 <- (y - 0.5) * Y$y2
   }
 
   if (term > 3) {
