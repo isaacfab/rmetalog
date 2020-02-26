@@ -3,7 +3,6 @@
 \docType{package}
 \name{rmetalog}
 \alias{rmetalog}
-\alias{rmetalog-package}
 \title{Create random samples from an metalog distribution object}
 \usage{
 rmetalog(m, n = 1, term = 3)

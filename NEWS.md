@@ -5,4 +5,4 @@ The first release of the rmetalog package. Functionality demonstrated in the REA
 Fixing a bug with the rmetalog sampling function and error messaging. There was an issues with sampling from terms less than the upper bound term.
 
 # rmetalgo 1.0.2
-Working bayesian updating method into the class. Also adding arguement on function to save the original source data.
+Fixing bugs with class type dependencies. Some of the error checking requires specific class types.

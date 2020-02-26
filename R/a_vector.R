@@ -37,7 +37,7 @@ a_vector_OLS_and_LP <-
 
 
       # Use LP if temp is not a valid numeric vector
-      if (class(temp) != 'matrix') {
+      if ('matrix' %in% class(temp)) {
         temp <- a_vector_LP(
           myList,
           term_limit = i,
