@@ -4,7 +4,7 @@ Isaac J. Faber
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/rmetalog)](http://cran.r-project.org/package=rmetalog)
+[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/rmetalog)](https://cran.r-project.org/package=rmetalog)
 
 ### The R Metalog Distribution
 
