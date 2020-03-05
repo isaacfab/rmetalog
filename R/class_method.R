@@ -10,6 +10,7 @@
 #'
 #' @examples
 #' # Load example data
+#' \dontrun{
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
@@ -21,6 +22,7 @@
 #'
 #' s <- rmetalog(myMetalog, n=1000, term = 9)
 #' hist(s)
+#' }
 rmetalog <- function(m, n = 1, term = 3) {
   UseMethod("rmetalog", m)
 }
@@ -110,6 +112,7 @@ rmetalog.metalog <- function(m, n = 1, term = 3){
 #'
 #' @examples
 #' # Load example data
+#' \dontrun{
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
@@ -120,6 +123,7 @@ rmetalog.metalog <- function(m, n = 1, term = 3){
 #'                      term_lower_bound = 9)
 #'
 #' s <- qmetalog(myMetalog,y=c(0.25,0.5,0.7),term = 9)
+#' }
 qmetalog <- function(m, y, term = 3) {
   UseMethod("qmetalog", m)
 }
@@ -208,6 +212,7 @@ qmetalog.metalog <- function(m, y, term = 3){
 #'
 #' @examples
 #' # Load example data
+#' \dontrun{
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
@@ -218,6 +223,7 @@ qmetalog.metalog <- function(m, y, term = 3){
 #'                      term_lower_bound = 9)
 #'
 #' s <- pmetalog(myMetalog,q=c(3,10,25),term = 9)
+#' }
 pmetalog <- function(m, q, term = 3) {
   UseMethod("pmetalog", m)
 }
@@ -262,6 +268,7 @@ pmetalog.metalog <- function(m, q, term = 3){
 #'
 #' @examples
 #' # Load example data
+#' \dontrun{
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
@@ -272,6 +279,7 @@ pmetalog.metalog <- function(m, q, term = 3){
 #'                      term_lower_bound = 9)
 #'
 #' s <- dmetalog(myMetalog,q=c(3,10,25),term = 9)
+#' }
 dmetalog <- function(m, q, term = 3) {
   UseMethod("dmetalog", m)
 }
@@ -314,6 +322,7 @@ dmetalog.metalog <- function(m, q, term = 3){
 #'
 #' @examples
 #' # Load example data
+#' \dontrun{
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
@@ -323,6 +332,7 @@ dmetalog.metalog <- function(m, q, term = 3){
 #'                      term_limit = 13)
 #'
 #' summary(myMetalog)
+#' }
 summary.metalog <- function(object, ...) {
   cat(' -----------------------------------------------\n',
       'Summary of Metalog Distribution Object\n',
@@ -353,15 +363,18 @@ summary.metalog <- function(object, ...) {
 #'
 #' @examples
 #' # Load example data
+#' \dontrun{
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
+#'
 #' myMetalog <- metalog(fishSize$FishSize,
 #'                      bounds=c(0, 60),
 #'                      boundedness = 'b',
 #'                      term_limit = 13)
 #'
 #' plot(myMetalog)
+#' }
 plot.metalog <- function(x, ...) {
   #build plots
   InitalResults <-

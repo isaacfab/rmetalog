@@ -7,7 +7,7 @@
 \format{A single column data frame with 3474 rows: \describe{
   \item{FishSize}{Recorded sizes of individual steelhead trout} }}
 \source{
-\url{TBD}
+\url{http://www.metalogdistributions.com/}
 }
 \usage{
 fishSize

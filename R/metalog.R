@@ -60,6 +60,7 @@ if(getRversion() >= "2.15.1")
 #'
 #' @examples
 #' # Load example data
+#' \dontrun{
 #' data("fishSize")
 #'
 #' # Create a bounded metalog object
@@ -67,6 +68,7 @@ if(getRversion() >= "2.15.1")
 #'                      bounds=c(0, 60),
 #'                      boundedness = 'b',
 #'                      term_limit = 13)
+#'}
 metalog <- function(x,
                     bounds = c(0,1),
                     boundedness = 'u',
