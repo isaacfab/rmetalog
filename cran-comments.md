@@ -2,6 +2,7 @@
 This is a resubmission. In this version I have:
 
 * updated a bug caused by a dependency on class type of a matrix
+* restricted the examples for run time considerations
 
 ## Test environments
 * local OS highSierra x86_64-apple-darwin15.6.0 (64-bit), R 3.6.2
