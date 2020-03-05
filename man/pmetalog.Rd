@@ -24,6 +24,7 @@ This is done through a newtons method approximation.
 }
 \examples{
 # Load example data
+\dontrun{
 data("fishSize")
 
 # Create a bounded metalog object
@@ -34,4 +35,5 @@ myMetalog <- metalog(fishSize$FishSize,
                      term_lower_bound = 9)
 
 s <- pmetalog(myMetalog,q=c(3,10,25),term = 9)
+}
 }

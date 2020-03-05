@@ -22,6 +22,7 @@ Generate quantiles with a probability from a metalog object
 }
 \examples{
 # Load example data
+\dontrun{
 data("fishSize")
 
 # Create a bounded metalog object
@@ -32,4 +33,5 @@ myMetalog <- metalog(fishSize$FishSize,
                      term_lower_bound = 9)
 
 s <- qmetalog(myMetalog,y=c(0.25,0.5,0.7),term = 9)
+}
 }

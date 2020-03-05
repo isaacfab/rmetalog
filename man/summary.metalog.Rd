@@ -19,6 +19,7 @@ Summary of the metalog object
 }
 \examples{
 # Load example data
+\dontrun{
 data("fishSize")
 
 # Create a bounded metalog object
@@ -28,4 +29,5 @@ myMetalog <- metalog(fishSize$FishSize,
                      term_limit = 13)
 
 summary(myMetalog)
+}
 }

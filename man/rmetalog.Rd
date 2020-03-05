@@ -22,6 +22,7 @@ The \code{rmetalog} package implements the metalog distribution in \code{R}
 }
 \examples{
 # Load example data
+\dontrun{
 data("fishSize")
 
 # Create a bounded metalog object
@@ -33,4 +34,5 @@ myMetalog <- metalog(fishSize$FishSize,
 
 s <- rmetalog(myMetalog, n=1000, term = 9)
 hist(s)
+}
 }
