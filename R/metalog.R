@@ -1,4 +1,4 @@
-#' rmetalog: R implementation of the metalog distribution
+#' rmetalog: The metalog distribution
 #'
 #' The \code{rmetalog} package implements the metalog distribution in \code{R}
 #'

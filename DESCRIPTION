@@ -1,6 +1,6 @@
 Package: rmetalog
 Type: Package
-Title: R Implementation of the Metalog Distribution
+Title: The Metalog Distribution
 Version: 1.0.2
 Authors@R: c(
     person("Isaac", "Faber", email = "isaacfab@gmail.com", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4478-9598")),
