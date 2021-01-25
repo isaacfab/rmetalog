@@ -37,7 +37,7 @@ over a wide range of fields and data sources.
 
 This repository is a complement and extension of the information found
 in the [paper
-published](http://pubsonline.informs.org/doi/abs/10.1287/deca.2016.0338)
+published](https://pubsonline.informs.org/doi/abs/10.1287/deca.2016.0338)
 in Decision Analysis and the
 [website](http://www.metalogdistributions.com/)
 
