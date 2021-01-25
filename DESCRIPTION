@@ -14,7 +14,6 @@ Imports:
     lpSolve,
     ggplot2
 Suggests:
-    devtools,
     knitr,
     rmarkdown
 Depends: R (>= 3.1.0)
