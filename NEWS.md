@@ -6,3 +6,6 @@ Fixing a bug with the rmetalog sampling function and error messaging. There was 
 
 # rmetalog 1.0.2
 Fixing bugs with class type dependencies. Some of the error checking requires specific class types.
+
+# rmetalog 1.0.3
+Fixing bug with calling order on a dataframe

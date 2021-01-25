@@ -5,14 +5,13 @@ MLprobs <- function(x, step_len) {
   if (class(x) != 'numeric') {
     return(print('Error: input must be a numeric vector!'))
   }
+
+# Need to sort the dataframe for the quantiles to work out
   l <- length(x)
+  x <- sort(x)
   x <- as.data.frame(x)
 
-  # Need to sort the dataframe for the quantiles to work out
-  x <- x[order(x), ]
-  x <- as.data.frame(x)
-
-  # Calculate the liklihood as an interpolation
+  # Calculate the likelihood as an interpolation
   x$probs <- 0
   for (i in 1:l) {
     if (i == 1) {

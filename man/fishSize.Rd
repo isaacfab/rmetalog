@@ -4,8 +4,10 @@
 \name{fishSize}
 \alias{fishSize}
 \title{Fish size measurements from the Pacific Northwest.}
-\format{A single column data frame with 3474 rows: \describe{
-  \item{FishSize}{Recorded sizes of individual steelhead trout} }}
+\format{
+A single column data frame with 3474 rows: \describe{
+  \item{FishSize}{Recorded sizes of individual steelhead trout} }
+}
 \source{
 \url{http://www.metalogdistributions.com/}
 }
